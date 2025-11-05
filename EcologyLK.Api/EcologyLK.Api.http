@@ -1,0 +1,6 @@
+@EcologyLK.Api_HostAddress = http://localhost:5038
+
+GET {{EcologyLK.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
