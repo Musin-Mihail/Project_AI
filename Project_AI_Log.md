@@ -308,3 +308,37 @@
 
 - После этого исправления основной MVP-сценарий (Анкета -> Карта -> Артефакты -> Календарь -> Риски -> Документы) должен работать.
 - Следующим логичным шагом, как и планировалось, является реализация **фундаментальной системы безопасности и ролей** (ТЗ, п.4 и п.6). Это потребует настройки `ASP.NET Identity` для регистрации и входа, защиты API и создания UI для аутентификации в Angular.
+
+### Этап 11: Реализация аутентификации (JWT) и авторизации (Backend)
+
+### Действия ИИ:
+
+- Проанализировав ТЗ (п.4 "Роли" и п.6 "Безопасность") и лог (Этапы 1-10 завершили функционал MVP), ИИ определил, что система не защищена и не имеет механизма входа.
+- **Действие 1 (Настройка JWT):** ИИ добавил конфигурацию для JSON Web Token в `appsettings.json` и настроил сервисы `AddAuthentication` (с `JwtBearer`) и `AddAuthorization` в `Program.cs`.
+- **Действие 2 (Сервис токенов):** Создан `AuthTokenService` (и интерфейс) для генерации JWT при успешном входе.
+- **Действие 3 (API Аутентификации):** Созданы DTO (`AuthDtos.cs`) и новый `AuthController.cs` с публичными эндпоинтами `POST /api/Auth/Register` (для регистрации) и `POST /api/Auth/Login` (для входа).
+- **Действие 4 (Защита API):** Все существующие контроллеры (`ClientSitesController`, `ArtifactsController`, `CalendarEventsController`, `FinancialDocumentsController`) были защищены атрибутом `[Authorize]`.
+- **Действие 5 (Seeding Ролей):** `DataSeeder.cs` был обновлен для асинхронного создания ролей ("Admin", "Client") и пользователя "Admin" при первом запуске API.
+
+### Предложенные изменения/артефакты:
+
+- Файл (Изменен): `EcologyLK.Api/appsettings.json` (Добавлена секция `Jwt`)
+- Файл (Новый): `EcologyLK.Api/DTOs/AuthDtos.cs` (DTO для Register, Login, AuthResponse)
+- Файл (Новый): `EcologyLK.Api/Services/IAuthTokenService.cs` (Интерфейс)
+- Файл (Новый): `EcologyLK.Api/Services/AuthTokenService.cs` (Реализация)
+- Файл (Новый): `EcologyLK.Api/Controllers/AuthController.cs` (API для Register/Login)
+- Файл (Изменен): `EcologyLK.Api/Data/DataSeeder.cs` (Добавлен асинхронный метод `SeedRolesAndAdminAsync`)
+- Файл (Изменен): `EcologyLK.Api/Program.cs` (Настроены Authentication/Authorization, вызван Seeder ролей)
+- Файл (Изменен): `EcologyLK.Api/Controllers/ClientSitesController.cs` (Добавлен `[Authorize]`)
+- Файл (Изменен): `EcologyLK.Api/Controllers/ArtifactsController.cs` (Добавлен `[Authorize]`)
+- Файл (Изменен): `EcologyLK.Api/Controllers/CalendarEventsController.cs` (Добавлен `[Authorize]`)
+- Файл (Изменен): `EcologyLK.Api/Controllers/FinancialDocumentsController.cs` (Добавлен `[Authorize]`)
+
+### Предложение ИИ для следующего этапа:
+
+- Backend API теперь защищено и готово к аутентификации.
+- Следующий логичный шаг — **реализация UI в Angular (`EcologyLK.Client`)** для аутентификации:
+  1. Создать `auth.service.ts` (для вызова `POST /api/Auth/Login` и `Register`).
+  2. Создать компоненты `login.component.ts/.html` и (опционально) `register.component.ts/.html`.
+  3. Создать `AuthGuard` для защиты маршрутов Angular.
+  4. Реализовать `HttpInterceptor` для автоматического добавления JWT-токена в заголовки всех API-запросов к защищенным эндпоинтам.

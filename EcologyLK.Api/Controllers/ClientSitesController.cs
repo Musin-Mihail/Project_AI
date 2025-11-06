@@ -3,6 +3,7 @@ using EcologyLK.Api.Data;
 using EcologyLK.Api.DTOs;
 using EcologyLK.Api.Models;
 using EcologyLK.Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,7 @@ namespace EcologyLK.Api.Controllers;
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class ClientSitesController : ControllerBase
 {
     private readonly AppDbContext _context;
