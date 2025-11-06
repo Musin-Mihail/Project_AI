@@ -202,3 +202,37 @@
 ### - Ключевые блоки MVP "Карта требований" и "Артефакты" теперь реализованы (API + UI).
 
 - Следующим логичным шагом по ТЗ (п.1) является реализация блока **"Календарь событий"**. Это потребует создания API в .NET для выборки событий (в первую очередь, `Deadline` из `EcologicalRequirement`) и создания нового UI-компонента-календаря в Angular (возможно, с использованием сторонней библиотеки) для их визуализации.
+
+### Этап 7: Реализация API и UI для "Календаря событий"
+
+### Действия ИИ:
+
+- Проанализировав ТЗ (п.1, требуется "Календарь событий") и лог (Этапы 1-6 завершены), ИИ определил, что следующим шагом является реализация блока "Календарь событий".
+- **Действие 1 (Backend API):**
+  - Создан `CalendarEventDto.cs` для передачи данных о событиях.
+  - Обновлен `MappingProfile.cs` для преобразования `EcologicalRequirement` (с `Deadline`) в `CalendarEventDto`.
+  - Создан `CalendarEventsController.cs` с эндпоинтом `GET /api/CalendarEvents`, который (для MVP) извлекает все `EcologicalRequirement`, у которых задан `Deadline`, и возвращает их как список событий.
+- **Действие 2 (Frontend UI):**
+  - Обновлен `models.ts` (добавлен `CalendarEventDto`).
+  - Создан `calendar.service.ts` (Сервис API для `GET /api/CalendarEvents`).
+  - Создан новый компонент `calendar-view.component.ts/.html/.scss` для отображения событий в виде таблицы (MVP-реализация календаря).
+  - Обновлен `app.routes.ts` (добавлен маршрут `/calendar`).
+  - Обновлен `app.html` (добавлена ссылка "Календарь событий" в главное меню).
+
+### Предложенные изменения/артефакты:
+
+- **Файл (Новый):** `EcologyLK.Api/DTOs/CalendarEventDto.cs`
+- **Файл (Новый):** `EcologyLK.Api/Controllers/CalendarEventsController.cs`
+- **Файл (Изменен):** `EcologyLK.Api/Utils/MappingProfile.cs` (Добавлен маппинг для Календаря)
+- **Файл (Изменен):** `EcologyLK.Client/src/app/models.ts` (Добавлен `CalendarEventDto`)
+- **Файл (Новый):** `EcologyLK.Client/src/app/calendar.service.ts`
+- **Файл (Новый):** `EcologyLK.Client/src/app/calendar-view/calendar-view.component.ts`
+- **Файл (Новый):** `EcologyLK.Client/src/app/calendar-view/calendar-view.component.html`
+- **Файл (Новый):** `EcologyLK.Client/src/app/calendar-view/calendar-view.component.scss`
+- **Файл (Изменен):** `EcologyLK.Client/src/app/app.routes.ts` (Добавлен маршрут `/calendar`)
+- **Файл (Изменен):** `EcologyLK.Client/src/app/app.html` (Добавлена ссылка в меню)
+
+### Предложение ИИ для следующего этапа:
+
+- Реализованы три ключевых блока MVP: "Карта требований", "Артефакты" и "Календарь событий".
+- Следующим логичным шагом по ТЗ является реализация блока **"Риски"**. Это потребует обновления `EcologicalRequirement`, чтобы включить информацию о штрафах (например, `PenaltyBasis` (статья КоАП) и `PenaltyAmount` (сумма)). Затем необходимо будет создать API и UI (вероятно, как часть `requirement-map.component`) для отображения этой информации.

@@ -62,7 +62,7 @@ export interface ClientSiteDto {
   requirements: EcologicalRequirementDto[];
 }
 
-// --- Добавлено ИИ: DTO для Артефакта ---
+// --- Добавлено ИИ (Этап 6): DTO для Артефакта ---
 /**
  * DTO для отображения информации об Артефакте (файле)
  */
@@ -74,5 +74,19 @@ export interface ArtifactDto {
   uploadDate: Date;
   clientSiteId: number;
   ecologicalRequirementId?: number;
+}
+// --- Конец ---
+
+// --- Добавлено ИИ (Этап 7): DTO для Календаря ---
+/**
+ * DTO для отображения события в календаре
+ */
+export interface CalendarEventDto {
+  id: number;
+  title: string;
+  startDate: Date;
+  eventType: string;
+  relatedSiteId?: number;
+  relatedSiteName?: string;
 }
 // --- Конец ---
