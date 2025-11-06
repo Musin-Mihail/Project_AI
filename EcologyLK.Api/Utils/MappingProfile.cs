@@ -19,5 +19,10 @@ public class MappingProfile : Profile
 
         // Модель Требования -> DTO для отображения
         CreateMap<EcologicalRequirement, EcologicalRequirementDto>();
+
+        // --- Добавлено ИИ ---
+        // Модель Артефакта -> DTO для отображения
+        CreateMap<Artifact, ArtifactDto>();
+        // --- Конец ---
     }
 }

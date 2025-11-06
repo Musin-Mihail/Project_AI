@@ -139,3 +139,39 @@
 - Базовый UI "Карты требований" реализован. Следующий логичный шаг — реализация **раздела "Артефакты/Хранилище" (ТЗ, п. 1)**, так как он тесно связан с требованиями.
 - Это потребует создания нового `ArtifactsController` в .NET API для обработки загрузки (upload) и скачивания (download) файлов, привязанных к `ClientSite` и/или `EcologicalRequirement`.
 - В Angular нужно будет добавить UI (например, кнопку "Артефакты" в каждой строке таблицы `requirement-map`) для вызова этого API и отображения списка файлов.
+
+### Этап 5: Реализация API "Хранилища Артефактов" (Backend)
+
+### Действия ИИ:
+
+- Проанализировав ТЗ (требуется блок "Артефакты/Хранилище") и лог (Этап 4 завершил UI для "Карты требований"), ИИ определил, что следующим шагом является создание **Backend API** для управления файлами (артефактами).
+- **Действие 1 (Модель):** Модифицирована модель `Artifact.cs` для включения `OriginalFileName`, `StoredFileName`, `MimeType`, `FileSize` и опциональной связи `EcologicalRequirementId`.
+- **Действие 2 (DTO и Маппинг):** Создан `ArtifactDto.cs` для безопасной передачи данных клиенту. Обновлен `MappingProfile.cs`.
+- **Действие 3 (Сервис Хранения):** Созданы интерфейс `IArtifactStorageService.cs` и его реализация `FileArtifactStorageService.cs` для инкапсуляции логики сохранения/чтения/удаления файлов из локальной папки `uploads` (для MVP).
+- **Действие 4 (API-Контроллер):** Создан `ArtifactsController.cs`. Он предоставляет CRUD-операции для файлов:
+  - `POST /api/Artifacts/Upload`: Загрузка файла (IFormFile) с привязкой к `siteId` и (опционально) `requirementId`.
+  - `GET /api/Artifacts?siteId=...`: Получение списка (DTO) артефактов для площадки.
+  - `GET /api/Artifacts/Download/{id}`: Скачивание физического файла.
+  - `DELETE /api/Artifacts/{id}`: Удаление файла и записи в БД.
+- **Действие 5 (Регистрация):** Новый `IArtifactStorageService` зарегистрирован в `Program.cs`.
+
+### Предложенные изменения/артефакты:
+
+### - Файл (Изменен): `EcologyLK.Api/Models/Artifact.cs` (Улучшена модель данных)
+
+- Файл (Новый): `EcologyLK.Api/DTOs/ArtifactDto.cs` (DTO для артефакта)
+- Файл (Изменен): `EcologyLK.Api/Utils/MappingProfile.cs` (Добавлен маппинг Artifact)
+- Файл (Изменен): `EcologyLK.Api/Data/AppDbContext.cs` (Настроена доп. связь для Artifact)
+- Файл (Новый): `EcologyLK.Api/Services/IArtifactStorageService.cs` (Интерфейс сервиса)
+- Файл (Новый): `EcologyLK.Api/Services/FileArtifactStorageService.cs` (Реализация сервиса)
+- Файл (Новый): `EcologyLK.Api/Controllers/ArtifactsController.cs` (API-контроллер)
+- Файл (Изменен): `EcologyLK.Api/Program.cs` (Регистрация IArtifactStorageService)
+
+### Предложение ИИ для следующего этага:
+
+- Backend API для артефактов полностью готово.
+- Следующий логичный шаг — **реализация UI в Angular (`EcologyLK.Client`)** для использования этого API:
+  1. Обновить `models.ts` (добавить `ArtifactDto`).
+  2. Обновить `client-site.service.ts` (или создать `artifact.service.ts`) для вызова новых эндпоинтов (`Upload`, `GetArtifactsForSite`, `Download`, `Delete`).
+  3. Создать новый компонент `artifact-manager.component.ts/.html` для отображения списка файлов, формы загрузки и кнопок управления.
+  4. Встроить `artifact-manager` в страницу `requirement-map.component.html`, чтобы "Карта требований" и "Артефакты" отображались вместе для выбранной площадки.

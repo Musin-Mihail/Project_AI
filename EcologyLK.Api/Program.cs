@@ -37,6 +37,11 @@ builder
 // 4. Регистрация сервиса генерации требований (Добавлено ИИ)
 builder.Services.AddScoped<IRequirementGenerationService, RequirementGenerationService>();
 
+// --- Добавлено ИИ: Регистрация сервиса хранения артефактов ---
+builder.Services.AddSingleton<IArtifactStorageService, FileArtifactStorageService>();
+
+// --- Конец ---
+
 // 5. Регистрация AutoMapper (Добавлено ИИ)
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
@@ -69,48 +74,4 @@ app.MapControllers();
 
 // --- КОНЕЦ: Изменения ИИ ---
 
-// ----- НАЧАЛО: Удалено ИИ (старый пример WeatherForecast) -----
-/*
-var summaries = new[]
-{
-    "Freezing",
-    "Bracing",
-    "Chilly",
-    "Cool",
-    "Mild",
-    "Warm",
-    "Balmy",
-    "Hot",
-    "Sweltering",
-    "Scorching",
-};
-
-app.MapGet(
-        "/weatherforecast",
-        () =>
-        {
-            var forecast = Enumerable
-                .Range(1, 5)
-                .Select(index => new WeatherForecast(
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-                .ToArray();
-            return forecast;
-        }
-    )
-    .WithName("GetWeatherForecast");
-*/
-// ----- КОНЕЦ: Удалено ИИ -----
-
 app.Run();
-
-// ----- НАЧАЛО: Удалено ИИ (старый record) -----
-/*
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
-*/
-// ----- КОНЕЦ: Удалено ИИ -----

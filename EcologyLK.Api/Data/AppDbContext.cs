@@ -45,6 +45,15 @@ public class AppDbContext : IdentityDbContext<AppUser> // Используем I
             .HasForeignKey(a => a.ClientSiteId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        // --- Добавлено ИИ: Связь Артефакта с Требованием (опционально) ---
+        builder
+            .Entity<Artifact>()
+            .HasOne(a => a.EcologicalRequirement)
+            .WithMany() // У требования может быть много артефактов (но мы не добавляем List<Artifact> в EcologicalRequirement)
+            .HasForeignKey(a => a.EcologicalRequirementId)
+            .OnDelete(DeleteBehavior.SetNull); // При удалении требования, артефакт остается, но связь сбрасывается
+        // --- Конец ---
+
         // AppUser -> Client (Один ко многим, опционально)
         builder
             .Entity<Client>()
