@@ -56,6 +56,12 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+// --- НАЧАЛО: Добавлено ИИ (Этап 10) ---
+// Инициализируем БД тестовыми данными (создаем Client c Id = 1)
+// Это исправит ошибку "Client with Id 1 not found"
+DataSeeder.SeedDatabase(app);
+
+// --- КОНЕЦ: Добавлено ИИ (Этап 10) ---
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
