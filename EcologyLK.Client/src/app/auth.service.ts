@@ -46,6 +46,19 @@ export class AuthService {
   }
 
   /**
+   * Проверяет, есть ли у пользователя указанная роль
+   * @param role Имя роли (напр. 'Admin')
+   */
+  hasRole(role: string): boolean {
+    const user = this.currentUser();
+    if (!user || !user.roles) {
+      return false;
+    }
+    // Проверяем наличие роли (без учета регистра на всякий случай)
+    return user.roles.some((r) => r.toLowerCase() === role.toLowerCase());
+  }
+
+  /**
    * POST: api/Auth/Login
    * Выполняет вход
    */

@@ -2,6 +2,7 @@ import { Component, inject, Input, OnInit, signal, WritableSignal } from '@angul
 import { CommonModule } from '@angular/common';
 import { ArtifactDto } from '../models';
 import { ArtifactService } from '../artifact.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-artifact-manager',
@@ -14,16 +15,20 @@ export class ArtifactManagerComponent implements OnInit {
   @Input({ required: true }) siteId!: number;
 
   private artifactService = inject(ArtifactService);
+  private authService = inject(AuthService);
 
   artifacts: WritableSignal<ArtifactDto[]> = signal([]);
   isLoading = signal(true);
   error = signal<string | null>(null);
   fileToUpload: File | null = null;
 
+  canDelete: boolean = false;
+
   ngOnInit() {
     if (this.siteId > 0) {
       this.loadArtifacts();
     }
+    this.canDelete = this.authService.hasRole('Admin');
   }
 
   /**

@@ -377,3 +377,23 @@
 - Например:
   1. **Backend (API):** Улучшить `[Authorize]` до `[Authorize(Roles = "Admin")]` на критических методах (например, `DELETE /api/Artifacts/{id}`), чтобы 'Клиент' не мог удалять файлы (если это требуется).
   2. **Frontend (UI):** В `AuthService` сохранить роли (`user.roles`). В компонентах (например, `artifact-manager.component.ts`) проверять эти роли и скрывать кнопки (например, "Удалить") с помощью `@if` для пользователей с ролью 'Client'.
+
+### Этап 13: Реализация авторизации на основе ролей (Admin vs. Client)
+
+### Действия ИИ:
+
+- Проанализировав ТЗ (п.4 "Роли") и предложение из Этапа 12, ИИ реализовал базовую авторизацию на основе ролей.
+- **Backend:** Метод `DELETE /api/Artifacts/{id}` в `ArtifactsController.cs` защищен атрибутом `[Authorize(Roles = "Admin")]`, чтобы только администраторы могли удалять файлы.
+- **Frontend:** В `AuthService` добавлен метод `hasRole('Admin')`. Компонент `artifact-manager` теперь использует этот метод, чтобы скрыть кнопку "Удалить" (`@if`) для пользователей, не являющихся администраторами.
+
+### Предложенные изменения/артефакты:
+
+- Файл (Изменен): `EcologyLK.Api/Controllers/ArtifactsController.cs` (Добавлен `[Authorize(Roles = "Admin")]` на метод `DeleteArtifact`)
+- Файл (Изменен): `EcologyLK.Client/src/app/auth.service.ts` (Добавлен метод `hasRole`)
+- Файл (Изменен): `EcologyLK.Client/src/app/artifact-manager/artifact-manager.component.ts` (Интеграция `AuthService` для проверки роли)
+- Файл (Изменен): `EcologyLK.Client/src/app/artifact-manager/artifact-manager.component.html` (Кнопка "Удалить" скрыта через `@if`)
+
+### Предложение ИИ для следующего этапа:
+
+- Базовая авторизация по ролям реализована. Следующий критически важный шаг — реализация **"Row-Level Security" (RLS)**, как того требует ТЗ (п.6 "Безопасность").
+- Это потребует: 1) Связать `AppUser` с `ClientId` при регистрации. 2) Модифицировать API-контроллеры (напр., `ClientSitesController`, `ArtifactsController`) для проверки того, что `ClientId` текущего пользователя совпадает с `ClientId` запрашиваемого ресурса, или что пользователь является 'Admin'.

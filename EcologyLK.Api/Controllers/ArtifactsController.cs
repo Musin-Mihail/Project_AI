@@ -42,6 +42,7 @@ public class ArtifactsController : ControllerBase
         [FromQuery] int siteId
     )
     {
+        // TODO: Добавить RLS - проверку, что у пользователя есть доступ к siteId
         if (siteId <= 0)
         {
             return BadRequest("Необходимо указать siteId.");
@@ -67,6 +68,7 @@ public class ArtifactsController : ControllerBase
         IFormFile file
     )
     {
+        // TODO: Добавить RLS - проверку, что у пользователя есть доступ к siteId
         if (file == null || file.Length == 0)
         {
             return BadRequest("Файл не был загружен.");
@@ -111,6 +113,7 @@ public class ArtifactsController : ControllerBase
     [HttpGet("Download/{id}")]
     public async Task<IActionResult> DownloadArtifact(int id)
     {
+        // TODO: Добавить RLS - проверку, что у пользователя есть доступ к этому артефакту
         var artifact = await _context.Artifacts.FindAsync(id);
         if (artifact == null)
         {
@@ -136,6 +139,7 @@ public class ArtifactsController : ControllerBase
     /// Удаляет артефакт (запись из БД и файл из хранилища).
     /// </summary>
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteArtifact(int id)
     {
         var artifact = await _context.Artifacts.FindAsync(id);

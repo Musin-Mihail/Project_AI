@@ -37,9 +37,11 @@
           <button class="action-btn download" (click)="onDownload(artifact)">
             Скачать
           </button>
+          @if (canDelete) {
           <button class="action-btn delete" (click)="onDelete(artifact)">
             Удалить
           </button>
+          }
         </td>
       </tr>
       } @empty {
