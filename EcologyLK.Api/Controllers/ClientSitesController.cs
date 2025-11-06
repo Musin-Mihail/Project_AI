@@ -38,34 +38,27 @@ public class ClientSitesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateClientSite([FromBody] CreateClientSiteDto createDto)
     {
-        // 1. Проверяем, существует ли родительский Клиент
         var client = await _context.Clients.FindAsync(createDto.ClientId);
         if (client == null)
         {
             return NotFound($"Client with Id {createDto.ClientId} not found.");
         }
 
-        // 2. Маппим DTO в нашу модель Entity
         var site = _mapper.Map<ClientSite>(createDto);
 
-        // 3. !!! Генерируем "Карту требований" !!!
         var requirements = _requirementService.GenerateRequirements(
             site.NvosCategory,
             site.WaterUseType,
             site.HasByproducts
         );
 
-        // 4. Присваиваем сгенерированные требования площадке
         site.Requirements = requirements;
 
-        // 5. Добавляем площадку (и связанные с ней требования) в БД
         await _context.ClientSites.AddAsync(site);
         await _context.SaveChangesAsync();
 
-        // 6. Маппим результат в DTO для ответа
         var siteDto = _mapper.Map<ClientSiteDto>(site);
 
-        // 7. Возвращаем 201 Created с DTO
         return CreatedAtAction(nameof(GetClientSiteById), new { id = site.Id }, siteDto);
     }
 
@@ -76,7 +69,6 @@ public class ClientSitesController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<ClientSiteDto>> GetClientSiteById(int id)
     {
-        // Ищем площадку, сразу включая связанные требования
         var site = await _context
             .ClientSites.Include(s => s.Requirements)
             .FirstOrDefaultAsync(s => s.Id == id);
@@ -86,7 +78,6 @@ public class ClientSitesController : ControllerBase
             return NotFound();
         }
 
-        // Маппим Entity в DTO для ответа
         var siteDto = _mapper.Map<ClientSiteDto>(site);
         return Ok(siteDto);
     }

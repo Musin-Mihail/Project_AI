@@ -15,21 +15,16 @@
 <h2>Карта требований</h2>
 <h3>Площадка: {{ currentSite.name }} ({{ currentSite.address }})</h3>
 
-<!-- TODO: Добавить фильтры и кнопки "Добавить артефакт" / "Экспорт" -->
-
 <div class="table-container">
   <table class="req-table">
     <thead>
       <tr>
         <th>Требование</th>
         <th>Основание</th>
-        <!-- === Добавлено ИИ (Этап 8) === -->
         <th>Риски (Штраф)</th>
-        <!-- === Конец === -->
         <th>Статус</th>
         <th>Срок выполнения</th>
         <th>Ответственный</th>
-        <!-- <th>Действия</th> -->
       </tr>
     </thead>
     <tbody>
@@ -37,19 +32,15 @@
       <tr>
         <td>{{ req.title }}</td>
         <td>{{ req.basis }}</td>
-        <!-- === Добавлено ИИ (Этап 8) === -->
         <td class="risk-cell">{{ req.penaltyRisk ?? 'N/A' }}</td>
-        <!-- === Конец === -->
         <td [class]="'status-' + RequirementStatus[req.status].toLowerCase()">
           {{ getStatusText(req.status) }}
         </td>
         <td>{{ req.deadline | date : 'dd.MM.yyyy' }}</td>
         <td>{{ req.responsiblePerson }}</td>
-        <!-- <td><button>Артефакты</button></td> -->
       </tr>
       } @empty {
       <tr>
-        <!-- === Изменено ИИ (Этап 8): colspan c 6 на 7 === -->
         <td colspan="7">
           Для данной площадки не было сгенерировано ни одного требования.
         </td>
@@ -60,15 +51,12 @@
 </div>
 }
 
-<!-- === Добавлено ИИ: Раздел Артефактов === -->
 @if (siteIdSignal() > 0) {
 <h2 class="artifacts-title">Артефакты / Хранилище</h2>
 <app-artifact-manager [siteId]="siteIdSignal()"></app-artifact-manager>
 }
 
-<!-- === НАЧАЛО: Добавлено ИИ (Этап 9) === -->
 @if (siteIdSignal() > 0) {
 <h2 class="financials-title">Договора / Счета / Акты</h2>
 <app-financial-document-list [siteId]="siteIdSignal()"></app-financial-document-list>
 }
-<!-- === КОНЕЦ: Добавлено ИИ (Этап 9) === -->

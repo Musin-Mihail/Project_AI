@@ -12,8 +12,6 @@ public class ClientSite
     public WaterUseType WaterUseType { get; set; }
     public bool HasByproducts { get; set; } // Есть побочный продукт (навоз/помет)
 
-    // ---
-
     // Связь: Принадлежит одному клиенту
     public int ClientId { get; set; }
     public Client? Client { get; set; }
@@ -24,8 +22,6 @@ public class ClientSite
     // Связь: Имеет много артефактов
     public List<Artifact> Artifacts { get; set; } = new();
 
-    // --- НАЧАЛО: Добавлено ИИ (Этап 9) ---
     // Связь: Имеет много финансовых документов
     public List<FinancialDocument> FinancialDocuments { get; set; } = new();
-    // --- КОНЕЦ: Добавлено ИИ (Этап 9) ---
 }

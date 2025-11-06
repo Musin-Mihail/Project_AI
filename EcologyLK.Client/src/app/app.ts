@@ -1,12 +1,10 @@
 import { Component, signal } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router'; // <-- Добавлено ИИ
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-root', // <-- Изменено ИИ
-  imports: [RouterOutlet, RouterLink], // <-- Добавлено ИИ
+  selector: 'app-root',
+  imports: [RouterOutlet, RouterLink],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {
-  // Boilerplate удален ИИ
-}
+export class App {}

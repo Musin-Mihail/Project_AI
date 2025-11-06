@@ -14,11 +14,7 @@ public class AppDbContext : IdentityDbContext<AppUser> // Используем I
     public DbSet<ClientSite> ClientSites { get; set; }
     public DbSet<EcologicalRequirement> EcologicalRequirements { get; set; }
     public DbSet<Artifact> Artifacts { get; set; }
-
-    // --- НАЧАЛО: Добавлено ИИ (Этап 9) ---
     public DbSet<FinancialDocument> FinancialDocuments { get; set; }
-
-    // --- КОНЕЦ: Добавлено ИИ (Этап 9) ---
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -50,16 +46,14 @@ public class AppDbContext : IdentityDbContext<AppUser> // Используем I
             .HasForeignKey(a => a.ClientSiteId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // --- Добавлено ИИ: Связь Артефакта с Требованием (опционально) ---
+        // Связь Артефакта с Требованием (опционально)
         builder
             .Entity<Artifact>()
             .HasOne(a => a.EcologicalRequirement)
-            .WithMany() // У требования может быть много артефактов (но мы не добавляем List<Artifact> в EcologicalRequirement)
+            .WithMany() // У требования может быть много артефактов
             .HasForeignKey(a => a.EcologicalRequirementId)
             .OnDelete(DeleteBehavior.SetNull); // При удалении требования, артефакт остается, но связь сбрасывается
-        // --- Конец ---
 
-        // --- НАЧАЛО: Добавлено ИИ (Этап 9) ---
         // ClientSite -> FinancialDocument (Один ко многим)
         builder
             .Entity<ClientSite>()
@@ -67,7 +61,6 @@ public class AppDbContext : IdentityDbContext<AppUser> // Используем I
             .WithOne(d => d.ClientSite)
             .HasForeignKey(d => d.ClientSiteId)
             .OnDelete(DeleteBehavior.Cascade);
-        // --- КОНЕЦ: Добавлено ИИ (Этап 9) ---
 
         // AppUser -> Client (Один ко многим, опционально)
         builder

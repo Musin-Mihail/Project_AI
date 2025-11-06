@@ -26,8 +26,6 @@ public enum RequirementStatus
     Completed, // Выполнено
 }
 
-// --- НАЧАЛО: Добавлено ИИ (Этап 9) ---
-
 // Тип финансового документа
 public enum FinancialDocumentType
 {
@@ -44,4 +42,3 @@ public enum FinancialDocumentStatus
     Paid, // Оплачен
     Overdue, // Просрочен
 }
-// --- КОНЕЦ: Добавлено ИИ (Этап 9) ---

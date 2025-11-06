@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations; // <-- Добавлено ИИ для исправления ошибки CS0246
+using System.ComponentModel.DataAnnotations;
 
 namespace EcologyLK.Api.Models;
 

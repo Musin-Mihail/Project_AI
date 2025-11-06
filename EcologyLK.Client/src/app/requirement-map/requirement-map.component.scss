@@ -26,7 +26,7 @@
   }
 
   tr:hover {
-    background-color: #f1f1f1;
+    background-color: #f1f1ff;
   }
 
   // Стили для статусов (как в ТЗ)
@@ -43,13 +43,11 @@
     font-weight: bold;
   }
 
-  // --- Добавлено ИИ (Этап 8) ---
   .risk-cell {
     font-style: italic;
     color: #666;
     min-width: 150px; // Чтобы текст штрафа не переносился слишком сильно
   }
-  // --- Конец ---
 }
 
 .error-message {
@@ -60,18 +58,14 @@
   border-radius: 8px;
 }
 
-/* --- Добавлено ИИ --- */
 .artifacts-title {
   margin-top: 2.5rem;
   font-size: 1.8rem;
   border-bottom-color: #28a745; // Зеленый, для отличия от h2 "Карты"
 }
-/* --- Конец --- */
 
-/* --- НАЧАЛО: Добавлено ИИ (Этап 9) --- */
 .financials-title {
   margin-top: 2.5rem;
   font-size: 1.8rem;
   border-bottom-color: #ffc107; // Желтый/Оранжевый
 }
-/* --- КОНЕЦ: Добавлено ИИ (Этап 9) --- */

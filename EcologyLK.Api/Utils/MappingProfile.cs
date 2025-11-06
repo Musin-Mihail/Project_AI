@@ -20,12 +20,9 @@ public class MappingProfile : Profile
         // Модель Требования -> DTO для отображения
         CreateMap<EcologicalRequirement, EcologicalRequirementDto>();
 
-        // --- Добавлено ИИ (Этап 5) ---
         // Модель Артефакта -> DTO для отображения
         CreateMap<Artifact, ArtifactDto>();
-        // --- Конец ---
 
-        // --- Добавлено ИИ (Этап 7) ---
         // Модель Требования -> DTO для Календаря
         CreateMap<EcologicalRequirement, CalendarEventDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
@@ -36,12 +33,9 @@ public class MappingProfile : Profile
             .ForMember(
                 dest => dest.RelatedSiteName,
                 opt => opt.MapFrom(src => src.ClientSite != null ? src.ClientSite.Name : null)
-            ); // <-- Исправлено ИИ: добавлена проверка на null
-        // --- Конец ---
+            );
 
-        // --- НАЧАЛО: Добавлено ИИ (Этап 9) ---
         // Модель Фин. Документа -> DTO для отображения
         CreateMap<FinancialDocument, FinancialDocumentDto>();
-        // --- КОНЕЦ: Добавлено ИИ (Этап 9) ---
     }
 }

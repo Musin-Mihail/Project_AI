@@ -23,8 +23,6 @@ public static class DataSeeder
             // Гарантируем, что БД (in-memory) создана
             context.Database.EnsureCreated();
 
-            // --- Инициализация Клиентов ---
-            // Проверяем, есть ли уже клиенты
             if (!context.Clients.Any())
             {
                 // Создаем первого клиента.
@@ -38,8 +36,6 @@ public static class DataSeeder
                     }
                 );
 
-                // Сохраняем изменения, чтобы этот клиент
-                // был доступен для следующих операций
                 context.SaveChanges();
 
                 Console.WriteLine("DataSeeder: Тестовый клиент (Id=1) успешно создан.");

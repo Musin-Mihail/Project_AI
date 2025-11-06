@@ -46,7 +46,7 @@ public class FinancialDocumentsController : ControllerBase
         return Ok(documents);
     }
 
-    // TODO: Для MVP реализован только GET.
+    // Для MVP реализован только GET.
     // В будущем здесь будут методы [HttpPost] для создания, [HttpPut] для смены статуса
     // и, возможно, привязка к IArtifactStorageService для загрузки сканов.
 }

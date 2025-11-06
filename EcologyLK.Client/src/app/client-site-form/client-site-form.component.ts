@@ -19,8 +19,6 @@ export class ClientSiteFormComponent {
   private siteService = inject(ClientSiteService);
 
   // Опции для выпадающих списков (select)
-  // Мы используем Object.keys для получения строковых ключей Enum,
-  // а затем фильтруем, чтобы убрать числовые ключи, которые TypeScript создает для enums
   nvosOptions = Object.keys(NvosCategory).filter((v) => isNaN(Number(v)));
   waterUseOptions = Object.keys(WaterUseType).filter((v) => isNaN(Number(v)));
 
@@ -31,12 +29,8 @@ export class ClientSiteFormComponent {
     clientId: [1, Validators.required],
     name: ['Тестовая площадка', Validators.required],
     address: ['г. Москва, ул. Пример, д. 1', Validators.required],
-    // --- Исправления ИИ (Ошибки TS2352) ---
-    // Инициализируем форму строковыми значениями Enum (напр. "III"),
-    // а не числовыми (напр. 2), чтобы тип соответствовал <option value="III">
     nvosCategory: [NvosCategory[NvosCategory.III], Validators.required],
     waterUseType: [WaterUseType[WaterUseType.None], Validators.required],
-    // --- Конец исправлений ИИ ---
     hasByproducts: [false, Validators.required],
   });
 
@@ -55,8 +49,6 @@ export class ClientSiteFormComponent {
       clientId: formValue.clientId!,
       name: formValue.name!,
       address: formValue.address!,
-      // Преобразуем строковые значения из <select> обратно в числа Enum
-      // Эта логика была верной, ошибка была только в инициализации
       nvosCategory: NvosCategory[formValue.nvosCategory! as keyof typeof NvosCategory],
       waterUseType: WaterUseType[formValue.waterUseType! as keyof typeof WaterUseType],
       hasByproducts: formValue.hasByproducts!,

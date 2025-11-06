@@ -14,9 +14,6 @@
                           Version="9.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory"
                           Version="9.0.1" />
-        <!-- Добавлен ИИ: 
-            AutoMapper для преобразования (маппинга) 
-            между моделями данных (Entities) и объектами DTO. -->
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection"
                           Version="12.0.1" />
     </ItemGroup>

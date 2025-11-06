@@ -23,8 +23,6 @@ export enum RequirementStatus {
   Completed, // Выполнено
 }
 
-// --- НАЧАЛО: Добавлено ИИ (Этап 9) ---
-
 // Тип финансового документа
 export enum FinancialDocumentType {
   Contract, // Договор
@@ -39,8 +37,6 @@ export enum FinancialDocumentStatus {
   Paid, // Оплачен
   Overdue, // Просрочен
 }
-
-// --- КОНЕЦ: Добавлено ИИ (Этап 9) ---
 
 // --- DTOs (зеркало EcologyLK.Api/DTOs) ---
 
@@ -65,11 +61,7 @@ export interface EcologicalRequirementDto {
   id: number;
   title: string;
   basis: string;
-
-  // --- Добавлено ИИ (Этап 8) ---
   penaltyRisk?: string;
-  // --- Конец ---
-
   responsiblePerson?: string;
   deadline?: Date;
   status: RequirementStatus;
@@ -86,7 +78,6 @@ export interface ClientSiteDto {
   requirements: EcologicalRequirementDto[];
 }
 
-// --- Добавлено ИИ (Этап 6): DTO для Артефакта ---
 /**
  * DTO для отображения информации об Артефакте (файле)
  */
@@ -99,9 +90,7 @@ export interface ArtifactDto {
   clientSiteId: number;
   ecologicalRequirementId?: number;
 }
-// --- Конец ---
 
-// --- Добавлено ИИ (Этап 7): DTO для Календаря ---
 /**
  * DTO для отображения события в календаре
  */
@@ -113,9 +102,7 @@ export interface CalendarEventDto {
   relatedSiteId?: number;
   relatedSiteName?: string;
 }
-// --- Конец ---
 
-// --- НАЧАЛО: Добавлено ИИ (Этап 9) ---
 /**
  * DTO для отображения Финансового документа
  */
@@ -128,4 +115,3 @@ export interface FinancialDocumentDto {
   status: FinancialDocumentStatus;
   clientSiteId: number;
 }
-// --- КОНЕЦ: Добавлено ИИ (Этап 9) ---

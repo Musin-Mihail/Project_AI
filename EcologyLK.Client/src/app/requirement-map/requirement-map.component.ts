@@ -3,20 +3,13 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ClientSiteDto, RequirementStatus } from '../models';
 import { ClientSiteService } from '../client-site.service';
-// --- Добавлено ИИ ---
 import { ArtifactManagerComponent } from '../artifact-manager/artifact-manager.component';
-// --- Конец ---
-// --- НАЧАЛО: Добавлено ИИ (Этап 9) ---
 import { FinancialDocumentListComponent } from '../financial-document-list/financial-document-list.component';
-// --- КОНЕЦ: Добавлено ИИ (Этап 9) ---
 
 @Component({
   selector: 'app-requirement-map',
   standalone: true,
-  // --- Изменено ИИ: Добавлен ArtifactManagerComponent ---
-  // --- Изменено ИИ (Этап 9): Добавлен FinancialDocumentListComponent ---
   imports: [CommonModule, ArtifactManagerComponent, FinancialDocumentListComponent],
-  // --- Конец ---
   templateUrl: './requirement-map.component.html',
   styleUrl: './requirement-map.component.scss',
 })
@@ -27,9 +20,7 @@ export class RequirementMapComponent implements OnInit {
 
   // Используем signal для хранения состояния
   site: WritableSignal<ClientSiteDto | null> = signal(null);
-  // --- Добавлено ИИ: Храним ID для передачи в дочерний компонент ---
   siteIdSignal = signal<number>(0);
-  // --- Конец ---
   isLoading = signal(true);
   error = signal<string | null>(null);
 
@@ -41,9 +32,7 @@ export class RequirementMapComponent implements OnInit {
     const idParam = this.route.snapshot.paramMap.get('id');
     const siteId = Number(idParam);
 
-    // --- Добавлено ИИ ---
     this.siteIdSignal.set(siteId);
-    // --- Конец ---
 
     if (isNaN(siteId) || siteId <= 0) {
       this.error.set('Некорректный ID площадки.');

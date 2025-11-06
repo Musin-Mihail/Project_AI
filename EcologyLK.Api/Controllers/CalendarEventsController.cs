@@ -30,7 +30,7 @@ public class CalendarEventsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CalendarEventDto>>> GetCalendarEvents()
     {
-        // TODO: В будущем здесь должна быть фильтрация по ClientId/UserId
+        // В будущем здесь должна быть фильтрация по ClientId/UserId
         // на основе аутентификации [Authorize]
 
         var events = await _context
