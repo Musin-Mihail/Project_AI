@@ -1,0 +1,54 @@
+<!-- 1. Состояние загрузки -->
+@if (isLoading()) {
+<p>Загрузка карты требований...</p>
+}
+
+<!-- 2. Состояние ошибки -->
+@if (error()) {
+<div class="error-message">
+  <strong>Ошибка:</strong> {{ error() }}
+</div>
+}
+
+<!-- 3. Успешная загрузка -->
+@if (site(); as currentSite) {
+<h2>Карта требований</h2>
+<h3>Площадка: {{ currentSite.name }} ({{ currentSite.address }})</h3>
+
+<!-- TODO: Добавить фильтры и кнопки "Добавить артефакт" / "Экспорт" -->
+
+<div class="table-container">
+  <table class="req-table">
+    <thead>
+      <tr>
+        <th>Требование</th>
+        <th>Основание</th>
+        <th>Статус</th>
+        <th>Срок выполнения</th>
+        <th>Ответственный</th>
+        <!-- <th>Действия</th> -->
+      </tr>
+    </thead>
+    <tbody>
+      @for (req of currentSite.requirements; track req.id) {
+      <tr>
+        <td>{{ req.title }}</td>
+        <td>{{ req.basis }}</td>
+        <td [class]="'status-' + RequirementStatus[req.status].toLowerCase()">
+          {{ getStatusText(req.status) }}
+        </td>
+        <td>{{ req.deadline | date : 'dd.MM.yyyy' }}</td>
+        <td>{{ req.responsiblePerson }}</td>
+        <!-- <td><button>Артефакты</button></td> -->
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="6">
+          Для данной площадки не было сгенерировано ни одного требования.
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
+}

@@ -1,0 +1,53 @@
+<h2>Анкета нового клиента (экология)</h2>
+<p>
+  Заполните параметры площадки, чтобы автоматически
+  сформировать "Карту требований".
+</p>
+
+<form [formGroup]="siteForm" (ngSubmit)="onSubmit()" class="site-form">
+  <!-- Блок 1: Данные площадки -->
+  <fieldset>
+    <legend>1) Данные площадки</legend>
+    <div class="form-field">
+      <label for="name">Название площадки / адрес</label>
+      <input id="name" type="text" formControlName="name" />
+    </div>
+    <div class="form-field">
+      <label for="address">Адрес</label>
+      <input id="address" type="text" formControlName="address" />
+    </div>
+  </fieldset>
+
+  <!-- Блок 2: Параметры для расчета -->
+  <fieldset>
+    <legend>2) Параметры расчета</legend>
+    <div class="form-field">
+      <label for="nvosCategory">Категория НВОС</label>
+      <select id="nvosCategory" formControlName="nvosCategory">
+        @for(cat of nvosOptions; track cat) {
+        <option [value]="cat">{{ cat }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="waterUseType">Источник водопользования</label>
+      <select id="waterUseType" formControlName="waterUseType">
+        @for(water of waterUseOptions; track water) {
+        <option [value]="water">{{ water }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="form-field checkbox">
+      <input id="hasByproducts" type="checkbox" formControlName="hasByproducts" />
+      <label for="hasByproducts">
+        Есть побочный продукт (навоз/помет)
+      </label>
+    </div>
+  </fieldset>
+
+  <button type="submit" [disabled]="siteForm.invalid">
+    Сформировать карту требований
+  </button>
+</form>

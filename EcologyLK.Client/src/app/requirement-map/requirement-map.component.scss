@@ -1,0 +1,53 @@
+.table-container {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.req-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  // Стили для статусов (как в ТЗ)
+  .status-notstarted {
+    color: #e65c00; // Оранжевый/Красный
+    font-weight: bold;
+  }
+  .status-inprogress {
+    color: #007bff; // Синий
+    font-weight: bold;
+  }
+  .status-completed {
+    color: #28a745; // Зеленый
+    font-weight: bold;
+  }
+}
+
+.error-message {
+  color: #d8000c;
+  background-color: #ffcccc;
+  border: 1px solid #d8000c;
+  padding: 1rem;
+  border-radius: 8px;
+}

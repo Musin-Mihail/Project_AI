@@ -103,3 +103,39 @@
   2. Создать Angular-сервис (`client-site.service.ts`) для инкапсуляции HTTP-запросов к `POST /api/ClientSites` и `GET /api/ClientSites/{id}`.
   3. Создать Angular-компонент "Анкеты" (`client-site-form.component.ts`) с формой (используя `ReactiveFormsModule`), которая будет отправлять данные на `POST` API.
   4. Создать Angular-компонент "Карты требований" (`requirement-map.component.ts`), который будет получать ID площадки, вызывать `GET` API и отображать список требований в виде таблицы (как в ТЗ).
+
+### Этап 4: Реализация UI (Angular) для "Анкеты" и "Карты требований"
+
+### Действия ИИ:
+
+- Проанализировав лог (Backend API из Этапа 3 готово) и код `EcologyLK.Client` (пустой boilerplate), ИИ определил, что следующим шагом является создание UI для основного MVP-сценария.
+- ИИ настроил Angular-проект (`app.config.ts`) для работы с API и формами, добавив `provideHttpClient()` и `provideReactiveForms()`.
+- Создал файл `EcologyLK.Client/src/app/models.ts` (TypeScript-интерфейсы и enums), который является точным зеркалом DTO и Enums из .NET API.
+- Создал `EcologyLK.Client/src/app/client-site.service.ts` для инкапсуляции HTTP-запросов (`POST` и `GET`) к `ClientSitesController`.
+- Создал компонент "Анкеты" (`client-site-form.component.ts/.html/.scss`) с использованием `ReactiveFormsModule` для сбора данных и отправки их на `POST /api/ClientSites`.
+- Создал компонент "Карты требований" (`requirement-map.component.ts/.html/.scss`) для получения `id` из URL, вызова `GET /api/ClientSites/{id}` и отображения сгенерированных требований в таблице (согласно ТЗ).
+- Настроил `EcologyLK.Client/src/app/app.routes.ts` для навигации между "Анкетой" и "Картой".
+- Очистил `app.ts` и `app.html` от boilerplate-кода, добавив базовый layout с `router-outlet`.
+
+### Предложенные изменения/артефакты:
+
+- **Файл (Изменен):** `EcologyLK.Client/src/app/app.config.ts` (Добавлены provideHttpClient, provideReactiveForms)
+- **Файл (Изменен):** `EcologyLK.Client/src/app/app.routes.ts` (Настроены маршруты для новых компонентов)
+- **Файл (Изменен):** `EcologyLK.Client/src/app/app.ts` (Очищен от boilerplate)
+- **Файл (Изменен):** `EcologyLK.Client/src/app/app.html` (Очищен от boilerplate, добавлен layout и router-outlet)
+- **Файл (Изменен):** `EcologyLK.Client/src/app/app.scss` (Добавлены базовые стили layout)
+- **Файл (Удален):** `EcologyLK.Client/src/app/app.spec.ts` (Удален boilerplate тест)
+- **Файл (Новый):** `EcologyLK.Client/src/app/models.ts` (Модели DTO и Enums)
+- **Файл (Новый):** `EcologyLK.Client/src/app/client-site.service.ts` (Сервис API)
+- **Файл (Новый):** `EcologyLK.Client/src/app/client-site-form/client-site-form.component.ts` (Логика "Анкеты")
+- **Файл (Новый):** `EcologyLK.Client/src/app/client-site-form/client-site-form.component.html` (Шаблон "Анкеты")
+- **Файл (Новый):** `EcologyLK.Client/src/app/client-site-form/client-site-form.component.scss` (Стили "Анкеты")
+- **Файл (Новый):** `EcologyLK.Client/src/app/requirement-map/requirement-map.component.ts` (Логика "Карты требований")
+- **Файл (Новый):** `EcologyLK.Client/src/app/requirement-map/requirement-map.component.html` (Шаблон "Карты требований")
+- **Файл (Новый):** `EcologyLK.Client/src/app/requirement-map/requirement-map.component.scss` (Стили "Карты требований")
+
+### Предложение ИИ для следующего этага:
+
+- Базовый UI "Карты требований" реализован. Следующий логичный шаг — реализация **раздела "Артефакты/Хранилище" (ТЗ, п. 1)**, так как он тесно связан с требованиями.
+- Это потребует создания нового `ArtifactsController` в .NET API для обработки загрузки (upload) и скачивания (download) файлов, привязанных к `ClientSite` и/или `EcologicalRequirement`.
+- В Angular нужно будет добавить UI (например, кнопку "Артефакты" в каждой строке таблицы `requirement-map`) для вызова этого API и отображения списка файлов.
