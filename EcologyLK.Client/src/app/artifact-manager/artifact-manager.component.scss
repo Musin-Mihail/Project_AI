@@ -1,0 +1,97 @@
+.upload-panel {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+
+  input[type='file'] {
+    flex-grow: 1;
+  }
+
+  button {
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #28a745; // Зеленый
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: #218838;
+    }
+
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.artifact-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  th {
+    background-color: #f9f9f9;
+    font-weight: bold;
+  }
+
+  tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .action-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &.download {
+      background-color: #007bff;
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+
+    &.delete {
+      background-color: #dc3545;
+      &:hover {
+        background-color: #c82333;
+      }
+    }
+  }
+}
+
+.error-message {
+  color: #d8000c;
+  background-color: #ffcccc;
+  border: 1px solid #d8000c;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}

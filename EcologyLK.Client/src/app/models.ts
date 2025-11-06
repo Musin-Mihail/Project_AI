@@ -61,3 +61,18 @@ export interface ClientSiteDto {
   address: string;
   requirements: EcologicalRequirementDto[];
 }
+
+// --- Добавлено ИИ: DTO для Артефакта ---
+/**
+ * DTO для отображения информации об Артефакте (файле)
+ */
+export interface ArtifactDto {
+  id: number;
+  originalFileName: string;
+  mimeType: string;
+  fileSize: number;
+  uploadDate: Date;
+  clientSiteId: number;
+  ecologicalRequirementId?: number;
+}
+// --- Конец ---

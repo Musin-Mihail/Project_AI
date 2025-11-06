@@ -175,3 +175,30 @@
   2. Обновить `client-site.service.ts` (или создать `artifact.service.ts`) для вызова новых эндпоинтов (`Upload`, `GetArtifactsForSite`, `Download`, `Delete`).
   3. Создать новый компонент `artifact-manager.component.ts/.html` для отображения списка файлов, формы загрузки и кнопок управления.
   4. Встроить `artifact-manager` в страницу `requirement-map.component.html`, чтобы "Карта требований" и "Артефакты" отображались вместе для выбранной площадки.
+
+### Этап 6: Реализация UI "Хранилища Артефактов" (Frontend)
+
+### Действия ИИ:
+
+- Проанализировав лог (Backend API для артефактов из Этапа 5 готово) и ТЗ (требуется блок "Артефакты/Хранилище"), ИИ реализовал недостающий **Frontend-интерфейс** в Angular.
+- **Действие 1 (Модель):** Обновлен `models.ts` для включения интерфейса `ArtifactDto`.
+- **Действие 2 (Сервис):** Создан `artifact.service.ts` для инкапсуляции HTTP-запросов к `ArtifactsController`. Он реализует методы `getArtifactsForSite`, `uploadArtifact` (с `FormData`), `deleteArtifact` и `downloadArtifact` (с обработкой `blob`).
+- **Действие 3 (Компонент):** Создан новый компонент `artifact-manager.component.ts/.html/.scss`, который отображает список файлов, форму загрузки и кнопки управления (скачать/удалить). Компонент принимает `siteId` в качестве `@Input()`.
+- **Действие 4 (Интеграция):** Модифицирован компонент `requirement-map.component.ts/.html` (Карта требований), чтобы он теперь включал в себя новый компонент `app-artifact-manager`, передавая ему `siteId` текущей площадки.
+
+### Предложенные изменения/артефакты:
+
+- Файл (Изменен): `EcologyLK.Client/src/app/models.ts` (Добавлен `ArtifactDto`)
+- Файл (Новый): `EcologyLK.Client/src/app/artifact.service.ts` (Сервис API для артефактов)
+- Файл (Новый): `EcologyLK.Client/src/app/artifact-manager/artifact-manager.component.ts` (Логика компонента)
+- Файл (Новый): `EcologyLK.Client/src/app/artifact-manager/artifact-manager.component.html` (Шаблон компонента)
+- Файл (Новый): `EcologyLK.Client/src/app/artifact-manager/artifact-manager.component.scss` (Стили компонента)
+- Файл (Изменен): `EcologyLK.Client/src/app/requirement-map/requirement-map.component.ts` (Импорт и регистрация `ArtifactManagerComponent`)
+- Файл (Изменен): `EcologyLK.Client/src/app/requirement-map/requirement-map.component.html` (Встроен `app-artifact-manager`)
+- Файл (Изменен): `EcologyLK.Client/src/app/requirement-map/requirement-map.component.scss` (Добавлены стили для заголовка артефактов)
+
+### Предложение ИИ для следующего этапа:
+
+### - Ключевые блоки MVP "Карта требований" и "Артефакты" теперь реализованы (API + UI).
+
+- Следующим логичным шагом по ТЗ (п.1) является реализация блока **"Календарь событий"**. Это потребует создания API в .NET для выборки событий (в первую очередь, `Deadline` из `EcologicalRequirement`) и создания нового UI-компонента-календаря в Angular (возможно, с использованием сторонней библиотеки) для их визуализации.

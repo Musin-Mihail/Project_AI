@@ -52,3 +52,9 @@
   </table>
 </div>
 }
+
+<!-- === Добавлено ИИ: Раздел Артефактов === -->
+@if (siteIdSignal() > 0) {
+<h2 class="artifacts-title">Артефакты / Хранилище</h2>
+<app-artifact-manager [siteId]="siteIdSignal()"></app-artifact-manager>
+}

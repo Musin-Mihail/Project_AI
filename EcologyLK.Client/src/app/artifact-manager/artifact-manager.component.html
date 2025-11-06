@@ -1,0 +1,52 @@
+<!-- 1. Состояние загрузки -->
+@if (isLoading()) {
+<p>Загрузка артефактов...</p>
+}
+
+<!-- 2. Состояние ошибки -->
+@if (error()) {
+<div class="error-message">
+  <strong>Ошибка:</strong> {{ error() }}
+</div>
+}
+
+<!-- 3. Панель загрузки -->
+<div class="upload-panel">
+  <input type="file" id="file-upload-input" (change)="onFileSelected($event)" />
+  <button (click)="onUpload()" [disabled]="!fileToUpload">Загрузить</button>
+</div>
+
+<!-- 4. Список артефактов -->
+<div class="table-container">
+  <table class="artifact-table">
+    <thead>
+      <tr>
+        <th>Имя файла</th>
+        <th>Размер</th>
+        <th>Дата загрузки</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (artifact of artifacts(); track artifact.id) {
+      <tr>
+        <td>{{ artifact.originalFileName }}</td>
+        <td>{{ formatFileSize(artifact.fileSize) }}</td>
+        <td>{{ artifact.uploadDate | date : 'dd.MM.yyyy HH:mm' }}</td>
+        <td class="actions">
+          <button class="action-btn download" (click)="onDownload(artifact)">
+            Скачать
+          </button>
+          <button class="action-btn delete" (click)="onDelete(artifact)">
+            Удалить
+          </button>
+        </td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="4">Для данной площадки артефакты не загружены.</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
