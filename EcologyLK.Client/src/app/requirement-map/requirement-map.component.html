@@ -65,3 +65,10 @@
 <h2 class="artifacts-title">Артефакты / Хранилище</h2>
 <app-artifact-manager [siteId]="siteIdSignal()"></app-artifact-manager>
 }
+
+<!-- === НАЧАЛО: Добавлено ИИ (Этап 9) === -->
+@if (siteIdSignal() > 0) {
+<h2 class="financials-title">Договора / Счета / Акты</h2>
+<app-financial-document-list [siteId]="siteIdSignal()"></app-financial-document-list>
+}
+<!-- === КОНЕЦ: Добавлено ИИ (Этап 9) === -->

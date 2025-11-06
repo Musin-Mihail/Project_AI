@@ -258,3 +258,34 @@
 
 - Реализованы четыре из пяти основных блоков MVP: "Карта требований", "Артефакты", "Календарь событий" и "Риски".
 - Последним нереализованным блоком MVP из ТЗ (п.1) является **"Договора/счета/акты"**. Следующим шагом будет создание API в .NET и UI в Angular для управления этими финансовыми документами.
+
+### Этап 9: Реализация блока "Договора/счета/акты" (API + UI)
+
+### Действия ИИ:
+
+- Проанализировав ТЗ и лог проекта, ИИ определил, что последним нереализованным блоком MVP (ТЗ, п.1) является **"Договора/счета/акты"**.
+- **Backend (.NET):** ИИ создал новую модель `FinancialDocument.cs` (и связанные Enums, DTO, маппинги), привязав ее к `ClientSite`. Создан `FinancialDocumentsController.cs` с эндпоинтом `GET /api/FinancialDocuments?siteId=...` для получения списка документов.
+- **Frontend (Angular):** ИИ создал `financial-document.service.ts` для вызова API. Создан новый компонент `financial-document-list.component` для отображения документов в виде таблицы. Этот компонент был интегрирован в существующую страницу `requirement-map.component.html` (страница "Площадки") для отображения всех блоков MVP в одном месте.
+
+### Предложенные изменения/артефакты:
+
+- Файл (Изменен): `EcologyLK.Api/Models/Enums.cs` (Добавлены `FinancialDocumentType` и `FinancialDocumentStatus`)
+- Файл (Новый): `EcologyLK.Api/Models/FinancialDocument.cs` (Модель данных)
+- Файл (Изменен): `EcologyLK.Api/Data/AppDbContext.cs` (Добавлен `DbSet` и связь)
+- Файл (Изменен): `EcologyLK.Api/Models/ClientSite.cs` (Добавлена навигационная коллекция)
+- Файл (Новый): `EcologyLK.Api/DTOs/FinancialDocumentDto.cs`
+- Файл (Изменен): `EcologyLK.Api/Utils/MappingProfile.cs` (Добавлен маппинг)
+- Файл (Новый): `EcologyLK.Api/Controllers/FinancialDocumentsController.cs` (API-контроллер)
+- Файл (Изменен): `EcologyLK.Client/src/app/models.ts` (Добавлены DTO и Enums)
+- Файл (Новый): `EcologyLK.Client/src/app/financial-document.service.ts` (Сервис API)
+- Файл (Новый): `EcologyLK.Client/src/app/financial-document-list/financial-document-list.component.ts`
+- Файл (Новый): `EcologyLK.Client/src/app/financial-document-list/financial-document-list.component.html`
+- Файл (Новый): `EcologyLK.Client/src/app/financial-document-list/financial-document-list.component.scss`
+- Файл (Изменен): `EcologyLK.Client/src/app/requirement-map/requirement-map.component.ts` (Интеграция нового компонента)
+- Файл (Изменен): `EcologyLK.Client/src/app/requirement-map/requirement-map.component.html` (Интеграция нового компонента)
+- Файл (Изменен): `EcologyLK.Client/src/app/requirement-map/requirement-map.component.scss` (Стили для заголовка)
+
+### Предложение ИИ для следующего этапа:
+
+- Все **5 основных блоков MVP** ("Карта требований", "Артефакты", "Календарь", "Риски", "Договора/счета/акты") теперь реализованы.
+- Следующим логичным шагом является реализация **фундаментальной системы безопасности и ролей**, как того требует ТЗ (п.4 "Роли и доступы" и п.6 "Безопасность"). Это потребует настройки `ASP.NET Identity` для регистрации и входа, создания API-эндпоинтов для аутентификации, защиты контроллеров .NET атрибутом `[Authorize]` и создания UI в Angular (Login/Register components).

@@ -23,4 +23,9 @@ public class ClientSite
 
     // Связь: Имеет много артефактов
     public List<Artifact> Artifacts { get; set; } = new();
+
+    // --- НАЧАЛО: Добавлено ИИ (Этап 9) ---
+    // Связь: Имеет много финансовых документов
+    public List<FinancialDocument> FinancialDocuments { get; set; } = new();
+    // --- КОНЕЦ: Добавлено ИИ (Этап 9) ---
 }

@@ -6,12 +6,16 @@ import { ClientSiteService } from '../client-site.service';
 // --- Добавлено ИИ ---
 import { ArtifactManagerComponent } from '../artifact-manager/artifact-manager.component';
 // --- Конец ---
+// --- НАЧАЛО: Добавлено ИИ (Этап 9) ---
+import { FinancialDocumentListComponent } from '../financial-document-list/financial-document-list.component';
+// --- КОНЕЦ: Добавлено ИИ (Этап 9) ---
 
 @Component({
   selector: 'app-requirement-map',
   standalone: true,
   // --- Изменено ИИ: Добавлен ArtifactManagerComponent ---
-  imports: [CommonModule, ArtifactManagerComponent],
+  // --- Изменено ИИ (Этап 9): Добавлен FinancialDocumentListComponent ---
+  imports: [CommonModule, ArtifactManagerComponent, FinancialDocumentListComponent],
   // --- Конец ---
   templateUrl: './requirement-map.component.html',
   styleUrl: './requirement-map.component.scss',

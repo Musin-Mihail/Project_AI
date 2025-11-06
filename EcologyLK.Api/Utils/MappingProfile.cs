@@ -38,5 +38,10 @@ public class MappingProfile : Profile
                 opt => opt.MapFrom(src => src.ClientSite != null ? src.ClientSite.Name : null)
             ); // <-- Исправлено ИИ: добавлена проверка на null
         // --- Конец ---
+
+        // --- НАЧАЛО: Добавлено ИИ (Этап 9) ---
+        // Модель Фин. Документа -> DTO для отображения
+        CreateMap<FinancialDocument, FinancialDocumentDto>();
+        // --- КОНЕЦ: Добавлено ИИ (Этап 9) ---
     }
 }

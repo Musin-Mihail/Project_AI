@@ -1,0 +1,71 @@
+.table-container {
+  overflow-x: auto;
+}
+
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  th {
+    background-color: #f9f9f9;
+    font-weight: bold;
+  }
+
+  tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .action-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &.download {
+      background-color: #007bff;
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+  }
+
+  // Стили для статусов
+  .status-draft,
+  .status-sent {
+    color: #555;
+  }
+  .status-paid {
+    color: #28a745;
+    font-weight: bold;
+  }
+  .status-overdue {
+    color: #dc3545;
+    font-weight: bold;
+  }
+}
+
+.error-message {
+  color: #d8000c;
+  background-color: #ffcccc;
+  border: 1px solid #d8000c;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}

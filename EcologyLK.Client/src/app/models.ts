@@ -23,6 +23,25 @@ export enum RequirementStatus {
   Completed, // Выполнено
 }
 
+// --- НАЧАЛО: Добавлено ИИ (Этап 9) ---
+
+// Тип финансового документа
+export enum FinancialDocumentType {
+  Contract, // Договор
+  Invoice, // Счет
+  Act, // Акт
+}
+
+// Статус финансового документа
+export enum FinancialDocumentStatus {
+  Draft, // Черновик
+  Sent, // Отправлен
+  Paid, // Оплачен
+  Overdue, // Просрочен
+}
+
+// --- КОНЕЦ: Добавлено ИИ (Этап 9) ---
+
 // --- DTOs (зеркало EcologyLK.Api/DTOs) ---
 
 /**
@@ -95,3 +114,18 @@ export interface CalendarEventDto {
   relatedSiteName?: string;
 }
 // --- Конец ---
+
+// --- НАЧАЛО: Добавлено ИИ (Этап 9) ---
+/**
+ * DTO для отображения Финансового документа
+ */
+export interface FinancialDocumentDto {
+  id: number;
+  documentNumber: string;
+  documentDate: Date;
+  amount: number;
+  type: FinancialDocumentType;
+  status: FinancialDocumentStatus;
+  clientSiteId: number;
+}
+// --- КОНЕЦ: Добавлено ИИ (Этап 9) ---

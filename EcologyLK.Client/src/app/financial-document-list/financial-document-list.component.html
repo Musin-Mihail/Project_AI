@@ -1,0 +1,49 @@
+<!-- 1. Состояние загрузки -->
+@if (isLoading()) {
+<p>Загрузка документов...</p>
+}
+
+<!-- 2. Состояние ошибки -->
+@if (error()) {
+<div class="error-message">
+  <strong>Ошибка:</strong> {{ error() }}
+</div>
+}
+
+<!-- 3. Список документов -->
+<div class="table-container">
+  <table class="doc-table">
+    <thead>
+      <tr>
+        <th>Тип</th>
+        <th>Номер</th>
+        <th>Дата</th>
+        <th>Сумма</th>
+        <th>Статус</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (doc of documents(); track doc.id) {
+      <tr>
+        <td>
+          <strong>{{ getDocumentTypeText(doc.type) }}</strong>
+        </td>
+        <td>{{ doc.documentNumber }}</td>
+        <td>{{ doc.documentDate | date: 'dd.MM.yyyy' }}</td>
+        <td>{{ doc.amount | number: '1.2-2' : 'ru' }} ₽</td>
+        <td [class]="'status-' + FinancialDocumentStatus[doc.status].toLowerCase()">
+          {{ getDocumentStatusText(doc.status) }}
+        </td>
+        <td class="actions">
+          <button class="action-btn download">Скачать</button>
+        </td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="6">Финансовые документы для данной площадки отсутствуют.</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>

@@ -15,6 +15,11 @@ public class AppDbContext : IdentityDbContext<AppUser> // Используем I
     public DbSet<EcologicalRequirement> EcologicalRequirements { get; set; }
     public DbSet<Artifact> Artifacts { get; set; }
 
+    // --- НАЧАЛО: Добавлено ИИ (Этап 9) ---
+    public DbSet<FinancialDocument> FinancialDocuments { get; set; }
+
+    // --- КОНЕЦ: Добавлено ИИ (Этап 9) ---
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder); // Обязательно для Identity
@@ -53,6 +58,16 @@ public class AppDbContext : IdentityDbContext<AppUser> // Используем I
             .HasForeignKey(a => a.EcologicalRequirementId)
             .OnDelete(DeleteBehavior.SetNull); // При удалении требования, артефакт остается, но связь сбрасывается
         // --- Конец ---
+
+        // --- НАЧАЛО: Добавлено ИИ (Этап 9) ---
+        // ClientSite -> FinancialDocument (Один ко многим)
+        builder
+            .Entity<ClientSite>()
+            .HasMany(s => s.FinancialDocuments)
+            .WithOne(d => d.ClientSite)
+            .HasForeignKey(d => d.ClientSiteId)
+            .OnDelete(DeleteBehavior.Cascade);
+        // --- КОНЕЦ: Добавлено ИИ (Этап 9) ---
 
         // AppUser -> Client (Один ко многим, опционально)
         builder
