@@ -342,3 +342,38 @@
   2. Создать компоненты `login.component.ts/.html` и (опционально) `register.component.ts/.html`.
   3. Создать `AuthGuard` для защиты маршрутов Angular.
   4. Реализовать `HttpInterceptor` для автоматического добавления JWT-токена в заголовки всех API-запросов к защищенным эндпоинтам.
+
+### Этап 12: Реализация UI аутентификации (Angular)
+
+### Действия ИИ:
+
+- Проанализировав лог (Этап 11), ИИ определил, что Backend API теперь полностью защищено (`[Authorize]`), но Frontend (`EcologyLK.Client`) не отправляет JWT-токен, что приводит к ошибкам `401 Unauthorized` и делает приложение неработоспособным.
+- **Действие 1 (Сервис):** Создан `EcologyLK.Client/src/app/auth.service.ts` для инкапсуляции логики входа (`login`), выхода (`logout`), а также хранения/загрузки сессии (JWT и данных пользователя) из `localStorage` с использованием `signal`.
+- **Действие 2 (Компонент):** Создан `EcologyLK.Client/src/app/login/...` (компонент) с `ReactiveFormsModule` для входа пользователя.
+- **Действие 3 (Interceptor):** Создан `EcologyLK.Client/src/app/auth.interceptor.ts`. Этот перехватчик автоматически добавляет заголовок `Authorization: Bearer <token>` ко всем исходящим API-запросам.
+- **Действие 4 (Guard):** Создан `EcologyLK.Client/src/app/auth.guard.ts` (тип `CanActivateFn`) для защиты функциональных маршрутов (`/new-site`, `/site/:id`, `/calendar`).
+- **Действие 5 (Интеграция):** Обновлены `app.config.ts` (для регистрации Interceptor), `app.routes.ts` (для добавления `/login` и `authGuard`), `app.html` и `app.ts` (для отображения информации о пользователе и кнопки "Выйти").
+- **Действие 6 (Модели):** Обновлен `EcologyLK.Client/src/app/models.ts` для включения DTO `AuthResponseDto`, `LoginUserDto` и `RegisterUserDto`.
+
+### Предложенные изменения/артефакты:
+
+- Файл (Изменен): `EcologyLK.Client/src/app/models.ts` (Добавлены DTO для аутентификации)
+- Файл (Новый): `EcologyLK.Client/src/app/auth.service.ts` (Сервис управления сессией и API)
+- Файл (Новый): `EcologyLK.Client/src/app/auth.interceptor.ts` (Перехватчик для добавления JWT)
+- Файл (Новый): `EcologyLK.Client/src/app/auth.guard.ts` (Защитник маршрутов)
+- Файл (Новый): `EcologyLK.Client/src/app/login/login.component.ts` (Логика компонента)
+- Файл (Новый): `EcologyLK.Client/src/app/login/login.component.html` (Шаблон компонента)
+- Файл (Новый): `EcologyLK.Client/src/app/login/login.component.scss` (Стили компонента)
+- Файл (Изменен): `EcologyLK.Client/src/app/app.config.ts` (Зарегистрирован `authInterceptor`)
+- Файл (Изменен): `EcologyLK.Client/src/app/app.routes.ts` (Добавлен маршрут `/login` и `authGuard`)
+- Файл (Изменен): `EcologyLK.Client/src/app/app.ts` (Добавлена логика `currentUser` и `logout`)
+- Файл (Изменен): `EcologyLK.Client/src/app/app.html` (Добавлен `currentUser` и кнопка "Выйти")
+- Файл (Изменен): `EcologyLK.Client/src/app/app.scss` (Стили для `logout-btn`)
+
+### Предложение ИИ для следующего этапа:
+
+- Теперь система полностью защищена и функциональна (API + UI). Пользователь может войти, и его токен используется для всех API-запросов.
+- Следующим шагом (согласно ТЗ, п.4 'Роли и доступы') является реализация **логики, зависящей от ролей**.
+- Например:
+  1. **Backend (API):** Улучшить `[Authorize]` до `[Authorize(Roles = "Admin")]` на критических методах (например, `DELETE /api/Artifacts/{id}`), чтобы 'Клиент' не мог удалять файлы (если это требуется).
+  2. **Frontend (UI):** В `AuthService` сохранить роли (`user.roles`). В компонентах (например, `artifact-manager.component.ts`) проверять эти роли и скрывать кнопки (например, "Удалить") с помощью `@if` для пользователей с ролью 'Client'.

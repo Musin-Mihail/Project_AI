@@ -10,6 +10,9 @@
       <span>Эко-Кабинет</span>
     </a>
   </div>
+
+  <!-- Показываем навигацию, только если пользователь вошел -->
+  @if (currentUser(); as user) {
   <nav class="main-nav">
     <a routerLink="/new-site" routerLinkActive="active-link">
       Новая Анкета
@@ -18,10 +21,19 @@
     <a routerLink="/calendar" routerLinkActive="active-link">
       Календарь событий
     </a>
+    <!-- TODO: Добавить ссылку на список площадок -->
   </nav>
+
   <div class="user-profile">
-    <span>(Пользователь)</span>
+    <span>{{ user.fullName }} ({{ user.email }})</span>
+    <button (click)="logout()" class="logout-btn">Выйти</button>
   </div>
+  } @else {
+  <!-- Если не залогинен, показываем пустое место -->
+  <div class="user-profile-guest">
+    <span></span>
+  </div>
+  }
 </header>
 
 <main class="main-content">

@@ -1,0 +1,35 @@
+<div class="login-container">
+  <h2>Вход в Эко-Кабинет</h2>
+  <p>
+    Пожалуйста, введите данные (по умолчанию 'admin@ecology.lk' /
+    'AdminP@ssw0rd1!').
+  </p>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form" novalidate>
+    <fieldset>
+      <div class="form-field">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" />
+      </div>
+      <div class="form-field">
+        <label for="password">Пароль</label>
+        <input id="password" type="password" formControlName="password" />
+      </div>
+    </fieldset>
+
+    <!-- Сообщение об ошибке -->
+    @if (error()) {
+    <div class="error-message">
+      {{ error() }}
+    </div>
+    }
+
+    <button type="submit" [disabled]="loginForm.invalid">Войти</button>
+  </form>
+
+  <!-- TODO: Добавить ссылку на регистрацию
+  <div class="register-link">
+    Нет аккаунта? <a routerLink="/register">Зарегистрироваться</a>
+  </div>
+  -->
+</div>

@@ -115,3 +115,36 @@ export interface FinancialDocumentDto {
   status: FinancialDocumentStatus;
   clientSiteId: number;
 }
+
+// --- НОВЫЕ DTO ДЛЯ АУТЕНТИФИКАЦИИ ---
+
+/**
+ * DTO для регистрации нового пользователя
+ * (Зеркало EcologyLK.Api/DTOs/AuthDtos.cs)
+ */
+export interface RegisterUserDto {
+  email: string;
+  password?: string; // Опционально, т.к. мы его не храним
+  fullName: string;
+}
+
+/**
+ * DTO для входа пользователя
+ * (Зеркало EcologyLK.Api/DTOs/AuthDtos.cs)
+ */
+export interface LoginUserDto {
+  email: string;
+  password?: string;
+}
+
+/**
+ * DTO ответа после успешной аутентификации
+ * (Зеркало EcologyLK.Api/DTOs/AuthDtos.cs)
+ */
+export interface AuthResponseDto {
+  userId: string;
+  email: string;
+  fullName: string;
+  token: string;
+  roles: string[];
+}
