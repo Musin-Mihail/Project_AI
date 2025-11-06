@@ -1,38 +1,57 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+// --- ИЗМЕНЕНО: Добавлен FormGroup ---
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NvosCategory, WaterUseType, CreateClientSiteDto } from '../models';
 import { ClientSiteService } from '../client-site.service';
+import { AuthService } from '../auth.service'; // Импортируем AuthService
 
 @Component({
   selector: 'app-client-site-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule], // Импортируем CommonModule и ReactiveFormsModule
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './client-site-form.component.html',
   styleUrl: './client-site-form.component.scss',
 })
 export class ClientSiteFormComponent {
-  // Внедряем сервисы
-  private fb = inject(FormBuilder);
-  private router = inject(Router);
-  private siteService = inject(ClientSiteService);
-
   // Опции для выпадающих списков (select)
   nvosOptions = Object.keys(NvosCategory).filter((v) => isNaN(Number(v)));
   waterUseOptions = Object.keys(WaterUseType).filter((v) => isNaN(Number(v)));
 
-  // Определяем нашу форму
-  siteForm = this.fb.group({
-    // TODO: ClientId должен браться из сессии пользователя
-    // Для MVP просто жестко задаем '1'
-    clientId: [1, Validators.required],
-    name: ['Тестовая площадка', Validators.required],
-    address: ['г. Москва, ул. Пример, д. 1', Validators.required],
-    nvosCategory: [NvosCategory[NvosCategory.III], Validators.required],
-    waterUseType: [WaterUseType[WaterUseType.None], Validators.required],
-    hasByproducts: [false, Validators.required],
-  });
+  // --- ИЗМЕНЕНО: Форма теперь объявляется здесь, а инициализируется в конструкторе ---
+  siteForm: FormGroup;
+  // --- ДОБАВЛЕНО: Флаг для UI ---
+  isAdmin = false;
+
+  // --- ИЗМЕНЕНО: Используем внедрение через конструктор ---
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private siteService: ClientSiteService,
+    // --- ИЗМЕНЕНО: authService сделан public для доступа из шаблона ---
+    public authService: AuthService
+  ) {
+    // --- ДОБАВЛЕНО: Проверяем роль ---
+    this.isAdmin = this.authService.hasRole('Admin');
+
+    // --- ДОБАВЛЕНО: Динамическая конфигурация формы ---
+    const formConfig: any = {
+      name: ['Тестовая площадка', Validators.required],
+      address: ['г. Москва, ул. Пример, д. 1', Validators.required],
+      nvosCategory: [NvosCategory[NvosCategory.III], Validators.required],
+      waterUseType: [WaterUseType[WaterUseType.None], Validators.required],
+      hasByproducts: [false, Validators.required],
+    };
+
+    // Если пользователь - Админ, добавляем в форму поле ClientId
+    if (this.isAdmin) {
+      formConfig.clientId = [1, [Validators.required, Validators.min(1)]];
+    }
+
+    // --- ИЗМЕНЕНО: Инициализация формы ---
+    this.siteForm = this.fb.group(formConfig);
+  }
 
   /**
    * Вызывается при отправке формы
@@ -43,10 +62,26 @@ export class ClientSiteFormComponent {
       return;
     }
 
-    // Преобразуем значения формы в DTO
+    let targetClientId: number | undefined;
     const formValue = this.siteForm.value;
+
+    if (this.isAdmin) {
+      // Админ берет ClientId из формы
+      targetClientId = formValue.clientId;
+    } else {
+      // Клиент берет ClientId из своей сессии
+      targetClientId = this.authService.currentUser()?.clientId;
+    }
+
+    if (!targetClientId) {
+      console.error('Ошибка: Не удалось определить ClientId для создания площадки.');
+      // TODO: Показать ошибку пользователю
+      return;
+    }
+
+    // Преобразуем значения формы в DTO
     const dto: CreateClientSiteDto = {
-      clientId: formValue.clientId!,
+      clientId: targetClientId, // Используем определенный ClientId
       name: formValue.name!,
       address: formValue.address!,
       nvosCategory: NvosCategory[formValue.nvosCategory! as keyof typeof NvosCategory],

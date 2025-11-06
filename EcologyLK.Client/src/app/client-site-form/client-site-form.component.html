@@ -8,6 +8,14 @@
   <!-- Блок 1: Данные площадки -->
   <fieldset>
     <legend>1) Данные площадки</legend>
+
+    @if (isAdmin) {
+    <div class="form-field">
+      <label for="clientId">ID Клиента (ЮрЛица)</label>
+      <input id="clientId" type="number" formControlName="clientId" />
+    </div>
+    }
+
     <div class="form-field">
       <label for="name">Название площадки / адрес</label>
       <input id="name" type="text" formControlName="name" />

@@ -49,7 +49,7 @@ public class AuthController : ControllerBase
             Email = registerDto.Email,
             UserName = registerDto.Email,
             FullName = registerDto.FullName,
-            // TODO: Привязать ClientId
+            ClientId = registerDto.ClientId,
         };
 
         var result = await _userManager.CreateAsync(user, registerDto.Password);
@@ -104,6 +104,7 @@ public class AuthController : ControllerBase
             FullName = user.FullName,
             Token = token,
             Roles = roles.ToList(),
+            ClientId = user.ClientId,
         };
 
         return Ok(response);

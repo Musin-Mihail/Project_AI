@@ -2,6 +2,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using EcologyLK.Api.Data;
 using EcologyLK.Api.DTOs;
+using EcologyLK.Api.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,23 @@ public class FinancialDocumentsController : ControllerBase
     }
 
     /// <summary>
+    /// Проверка, имеет ли пользователь (Клиент или Админ)
+    /// доступ к указанной площадке
+    /// </summary>
+    private async Task<bool> CheckSiteAccessAsync(int siteId)
+    {
+        if (User.IsAdmin())
+            return true;
+
+        var userClientId = User.GetClientId();
+        if (!userClientId.HasValue)
+            return false; // Пользователь не привязан к клиенту
+
+        var site = await _context.ClientSites.FindAsync(siteId);
+        return site != null && site.ClientId == userClientId.Value;
+    }
+
+    /// <summary>
     /// GET: api/FinancialDocuments?siteId=5
     /// Получает список финансовых документов для указанной площадки.
     /// </summary>
@@ -34,6 +52,10 @@ public class FinancialDocumentsController : ControllerBase
         [FromQuery] int siteId
     )
     {
+        if (!await CheckSiteAccessAsync(siteId))
+        {
+            return Forbid("Доступ к данной площадке запрещен.");
+        }
         if (siteId <= 0)
         {
             return BadRequest("Необходимо указать siteId.");

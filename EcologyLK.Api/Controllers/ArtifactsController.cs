@@ -4,6 +4,7 @@ using EcologyLK.Api.Data;
 using EcologyLK.Api.DTOs;
 using EcologyLK.Api.Models;
 using EcologyLK.Api.Services;
+using EcologyLK.Api.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,23 @@ public class ArtifactsController : ControllerBase
     }
 
     /// <summary>
+    /// Проверка, имеет ли пользователь (Клиент или Админ)
+    /// доступ к указанной площадке
+    /// </summary>
+    private async Task<bool> CheckSiteAccessAsync(int siteId)
+    {
+        if (User.IsAdmin())
+            return true;
+
+        var userClientId = User.GetClientId();
+        if (!userClientId.HasValue)
+            return false; // Пользователь не привязан к клиенту
+
+        var site = await _context.ClientSites.FindAsync(siteId);
+        return site != null && site.ClientId == userClientId.Value;
+    }
+
+    /// <summary>
     /// GET: api/Artifacts?siteId=5
     /// Получает список артефактов (метаданные) для указанной площадки.
     /// </summary>
@@ -42,7 +60,10 @@ public class ArtifactsController : ControllerBase
         [FromQuery] int siteId
     )
     {
-        // TODO: Добавить RLS - проверку, что у пользователя есть доступ к siteId
+        if (!await CheckSiteAccessAsync(siteId))
+        {
+            return Forbid("Доступ к данной площадке запрещен.");
+        }
         if (siteId <= 0)
         {
             return BadRequest("Необходимо указать siteId.");
@@ -68,7 +89,10 @@ public class ArtifactsController : ControllerBase
         IFormFile file
     )
     {
-        // TODO: Добавить RLS - проверку, что у пользователя есть доступ к siteId
+        if (!await CheckSiteAccessAsync(siteId))
+        {
+            return Forbid("Доступ к данной площадке запрещен.");
+        }
         if (file == null || file.Length == 0)
         {
             return BadRequest("Файл не был загружен.");
@@ -119,7 +143,10 @@ public class ArtifactsController : ControllerBase
         {
             return NotFound("Артефакт не найден.");
         }
-
+        if (!await CheckSiteAccessAsync(artifact.ClientSiteId))
+        {
+            return Forbid("Доступ к данному файлу запрещен.");
+        }
         try
         {
             var (fileStream, mimeType) = await _storageService.GetFileStreamAsync(

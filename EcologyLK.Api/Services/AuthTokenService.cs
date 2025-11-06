@@ -28,10 +28,14 @@ public class AuthTokenService : IAuthTokenService
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
-        // Добавляем роли в claims
         foreach (var role in roles)
         {
             claims.Add(new Claim(ClaimTypes.Role, role));
+        }
+
+        if (user.ClientId.HasValue)
+        {
+            claims.Add(new Claim("client_id", user.ClientId.Value.ToString()));
         }
 
         var jwtKey = _config["Jwt:SecretKey"];

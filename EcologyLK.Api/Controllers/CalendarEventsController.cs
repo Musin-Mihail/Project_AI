@@ -2,6 +2,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using EcologyLK.Api.Data;
 using EcologyLK.Api.DTOs;
+using EcologyLK.Api.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -32,8 +33,28 @@ public class CalendarEventsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CalendarEventDto>>> GetCalendarEvents()
     {
-        // В будущем здесь должна быть фильтрация по ClientId/UserId
-        // на основе аутентификации [Authorize]
+        var userClientId = User.GetClientId();
+        var isAdmin = User.IsAdmin();
+        var query = _context.EcologicalRequirements.Where(r => r.Deadline.HasValue);
+
+        if (!isAdmin)
+        {
+            if (!userClientId.HasValue)
+            {
+                // Пользователь не-админ и не привязан к клиенту = не видит ничего
+                return Ok(new List<CalendarEventDto>());
+            }
+
+            // Получаем ID площадок, к которым у клиента есть доступ
+            var clientSiteIds = await _context
+                .ClientSites.Where(s => s.ClientId == userClientId.Value)
+                .Select(s => s.Id)
+                .ToListAsync();
+
+            // Фильтруем требования по этим площадкам
+            query = query.Where(r => clientSiteIds.Contains(r.ClientSiteId));
+        }
+        // Админ видит все (фильтр не применяется)
 
         var events = await _context
             .EcologicalRequirements

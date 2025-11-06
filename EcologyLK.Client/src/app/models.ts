@@ -126,6 +126,7 @@ export interface RegisterUserDto {
   email: string;
   password?: string; // Опционально, т.к. мы его не храним
   fullName: string;
+  clientId: number;
 }
 
 /**
@@ -147,4 +148,5 @@ export interface AuthResponseDto {
   fullName: string;
   token: string;
   roles: string[];
+  clientId?: number;
 }

@@ -18,7 +18,8 @@ public class RegisterUserDto
     [Required]
     public string FullName { get; set; } = string.Empty;
 
-    // TODO: Добавить ClientId для регистрации "Клиента"
+    [Required]
+    public int ClientId { get; set; }
 }
 
 /// <summary>
@@ -44,4 +45,5 @@ public class AuthResponseDto
     public string FullName { get; set; } = string.Empty;
     public string Token { get; set; } = string.Empty;
     public List<string> Roles { get; set; } = new();
+    public int? ClientId { get; set; }
 }

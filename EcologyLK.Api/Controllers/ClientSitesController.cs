@@ -3,6 +3,7 @@ using EcologyLK.Api.Data;
 using EcologyLK.Api.DTOs;
 using EcologyLK.Api.Models;
 using EcologyLK.Api.Services;
+using EcologyLK.Api.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +41,13 @@ public class ClientSitesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateClientSite([FromBody] CreateClientSiteDto createDto)
     {
+        var userClientId = User.GetClientId();
+        var isAdmin = User.IsAdmin();
+
+        if (!isAdmin && userClientId != createDto.ClientId)
+        {
+            return Forbid("Вы не можете создавать площадки для другого клиента.");
+        }
         var client = await _context.Clients.FindAsync(createDto.ClientId);
         if (client == null)
         {
@@ -78,6 +86,14 @@ public class ClientSitesController : ControllerBase
         if (site == null)
         {
             return NotFound();
+        }
+
+        var userClientId = User.GetClientId();
+        var isAdmin = User.IsAdmin();
+
+        if (!isAdmin && userClientId != site.ClientId)
+        {
+            return Forbid("Доступ к данной площадке запрещен.");
         }
 
         var siteDto = _mapper.Map<ClientSiteDto>(site);

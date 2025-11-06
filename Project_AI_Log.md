@@ -397,3 +397,32 @@
 
 - Базовая авторизация по ролям реализована. Следующий критически важный шаг — реализация **"Row-Level Security" (RLS)**, как того требует ТЗ (п.6 "Безопасность").
 - Это потребует: 1) Связать `AppUser` с `ClientId` при регистрации. 2) Модифицировать API-контроллеры (напр., `ClientSitesController`, `ArtifactsController`) для проверки того, что `ClientId` текущего пользователя совпадает с `ClientId` запрашиваемого ресурса, или что пользователь является 'Admin'.
+
+### Этап 14: Внедрение Row-Level Security (RLS) и привязка к ClientId
+
+### Действия ИИ:
+
+- Проанализировав ТЗ (п.6 "Безопасность") и лог (Этап 13), ИИ определил наличие **критической уязвимости**: отсутствие "Row-Level Security" (RLS). Любой аутентифицированный клиент мог получить доступ к данным (площадкам, артефактам, документам) другого клиента, перебирая ID в URL.
+- **Действие 1 (Backend - JWT):** ИИ модифицировал `AuthTokenService` для встраивания `client_id` пользователя в JWT, а также `AuthController` и `AuthResponseDto` для передачи `ClientId` при входе.
+- **Действие 2 (Backend - Утилита):** ИИ создал `ClaimsPrincipalExtensions` для удобного получения `User.GetClientId()` и `User.IsAdmin()` в контроллерах.
+- **Действие 3 (Backend - RLS):** ИИ модифицировал **все** контроллеры (`ClientSites`, `Artifacts`, `CalendarEvents`, `FinancialDocuments`), добавив в них логику проверки. Теперь при запросе данных API проверяет, что `ClientId` запрашиваемого ресурса совпадает с `ClientId` пользователя в JWT, или что пользователь имеет роль "Admin".
+- **Действие 4 (Frontend - UI):** ИИ исправил `client-site-form.component.ts`, убрав жестко заданный `clientId: 1` и заменив его на `clientId` из `AuthService.currentUser()`, что устранило ошибку привязки данных.
+
+### Предложенные изменения/артефакты:
+
+- Файл (Новый): `EcologyLK.Api/Utils/ClaimsPrincipalExtensions.cs` (Служебный класс для работы с Claims)
+- Файл (Изменен): `EcologyLK.Api/DTOs/AuthDtos.cs` (Добавлен ClientId в Register и Response)
+- Файл (Изменен): `EcologyLK.Api/Services/AuthTokenService.cs` (Добавлена `client_id` claim в JWT)
+- Файл (Изменен): `EcologyLK.Api/Controllers/AuthController.cs` (Обработка ClientId при Register/Login)
+- Файл (Изменен): `EcologyLK.Api/Controllers/ClientSitesController.cs` (Добавлены проверки RLS)
+- Файл (Изменен): `EcologyLK.Api/Controllers/ArtifactsController.cs` (Добавлены проверки RLS)
+- Файл (Изменен): `EcologyLK.Api/Controllers/CalendarEventsController.cs` (Добавлены проверки RLS)
+- Файл (Изменен): `EcologyLK.Api/Controllers/FinancialDocumentsController.cs` (Добавлены проверки RLS)
+- Файл (Изменен): `EcologyLK.Client/src/app/models.ts` (Обновлен `AuthResponseDto`)
+- Файл (Изменен): `EcologyLK.Client/src/app/client-site-form/client-site-form.component.ts` (Исправлен hardcode `clientId: 1`)
+- Файл (Изменен): `EcologyLK.Client/src/app/client-site-form/client-site-form.component.html` (Удалено поле ClientId из HTML-формы)
+
+### Предложение ИИ для следующего этапа:
+
+- MVP-проект теперь функционально завершен и защищен (реализованы аутентификация, авторизация по ролям и RLS).
+- Следующим логичным шагом (согласно ТЗ, п.7 "Админ-панель") является **создание панели администратора** для управления пользователями и справочниками. Это потребует создания `AdminController` в API (для CRUD операций над `Client` и `AppUser`) и нового набора компонентов в Angular, защищенных `authGuard` и проверкой на роль "Admin".
