@@ -116,7 +116,7 @@ export interface FinancialDocumentDto {
   clientSiteId: number;
 }
 
-// --- НОВЫЕ DTO ДЛЯ АУТЕНТИФИКАЦИИ ---
+// --- DTO ДЛЯ АУТЕНТИФИКАЦИИ ---
 
 /**
  * DTO для регистрации нового пользователя
@@ -148,5 +148,57 @@ export interface AuthResponseDto {
   fullName: string;
   token: string;
   roles: string[];
+  clientId?: number;
+}
+
+// --- DTO ДЛЯ АДМИН-ПАНЕЛИ (Новое) ---
+// (Зеркало EcologyLK.Api/DTOs/AdminDtos.cs)
+
+/**
+ * DTO для отображения информации о Клиенте (ЮрЛице)
+ */
+export interface ClientDto {
+  id: number;
+  name: string;
+  inn: string;
+  ogrn: string;
+}
+
+/**
+ * DTO для создания нового Клиента (ЮрЛица)
+ */
+export interface CreateClientDto {
+  name: string;
+  inn: string;
+  ogrn: string;
+}
+
+/**
+ * DTO для отображения информации о Пользователе
+ */
+export interface UserDto {
+  id: string;
+  email: string;
+  fullName: string;
+  clientId?: number;
+  roles: string[];
+}
+
+/**
+ * DTO для создания нового Пользователя (Администратором)
+ */
+export interface CreateUserDto {
+  email: string;
+  password?: string;
+  fullName: string;
+  clientId?: number;
+  role: string;
+}
+
+/**
+ * DTO для обновления данных Пользователя
+ */
+export interface UpdateUserDto {
+  fullName: string;
   clientId?: number;
 }

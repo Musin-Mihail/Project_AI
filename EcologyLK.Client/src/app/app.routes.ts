@@ -4,12 +4,27 @@ import { RequirementMapComponent } from './requirement-map/requirement-map.compo
 import { CalendarViewComponent } from './calendar-view/calendar-view.component';
 import { LoginComponent } from './login/login.component';
 import { authGuard } from './auth.guard';
+import { adminGuard } from './admin.guard'; // (1) Импортируем новый guard
+import { AdminUserListComponent } from './admin-user-list/admin-user-list.component'; // (2) Импорт
+import { AdminClientListComponent } from './admin-client-list/admin-client-list.component'; // (3) Импорт
 
 export const routes: Routes = [
   // Публичный маршрут для Входа
   {
     path: 'login',
     component: LoginComponent,
+  },
+
+  // --- Админ-панель (Новое) ---
+  {
+    path: 'admin/users',
+    component: AdminUserListComponent,
+    canActivate: [authGuard, adminGuard], // (4) Защищаем adminGuard
+  },
+  {
+    path: 'admin/clients',
+    component: AdminClientListComponent,
+    canActivate: [authGuard, adminGuard], // (5) Защищаем adminGuard
   },
 
   // --- Защищенные маршруты ---

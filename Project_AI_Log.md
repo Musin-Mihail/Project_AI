@@ -450,3 +450,34 @@
 
 - Backend API для "Админ-панели" полностью готово.
 - Следующий логичный шаг — **реализация UI в Angular (`EcologyLK.Client`)** для использования этого API. Это потребует создания нового модуля (или набора компонентов), защищенного `authGuard` и дополнительной проверкой на роль 'Admin'. Необходимо создать страницы `/admin/users` и `/admin/clients` для отображения и управления этими сущностями.
+
+### Этап 16: Реализация UI "Админ-панели" (Frontend)
+
+### Действия ИИ:
+
+- Проанализировав ТЗ (п.7 "Админ-панель") и лог (Этап 15 завершил API), ИИ определил, что следующим шагом является реализация **Frontend-интерфейса** для администрирования.
+- **Действие 1 (Сервис и Модели):** Создан `admin.service.ts` для вызова эндпоинтов `api/Admin`. Обновлен `models.ts`, включив в него DTO `ClientDto`, `UserDto` и др.
+- **Действие 2 (Охрана маршрутов):** Создан `admin.guard.ts` (CanActivateFn), который проверяет `authService.hasRole('Admin')`, блокируя доступ для обычных клиентов.
+- **Действие 3 (Компоненты):** Созданы два новых компонента (`admin-user-list` и `admin-client-list`) для отображения списков сущностей и форм для их создания.
+- **Действие 4 (Интеграция):** Обновлен `app.routes.ts` для добавления маршрутов `/admin/users` и `/admin/clients`, защищенных `authGuard` и `adminGuard`. Обновлены `app.html` и `app.ts` для отображения ссылок на "Админ-панель" в главном меню (только для роли "Admin").
+
+### Предложенные изменения/артефакты:
+
+- Файл (Изменен): `EcologyLK.Client/src/app/models.ts` (Добавлены DTO для Админ-панели)
+- Файл (Новый): `EcologyLK.Client/src/app/admin.guard.ts` (Guard для проверки роли "Admin")
+- Файл (Новый): `EcologyLK.Client/src/app/admin.service.ts` (Сервис API для `AdminController`)
+- Файл (Новый): `EcologyLK.Client/src/app/admin-client-list/admin-client-list.component.ts`
+- Файл (Новый): `EcologyLK.Client/src/app/admin-client-list/admin-client-list.component.html`
+- Файл (Новый): `EcologyLK.Client/src/app/admin-client-list/admin-client-list.component.scss`
+- Файл (Новый): `EcologyLK.Client/src/app/admin-user-list/admin-user-list.component.ts`
+- Файл (Новый): `EcologyLK.Client/src/app/admin-user-list/admin-user-list.component.html`
+- Файл (Новый): `EcologyLK.Client/src/app/admin-user-list/admin-user-list.component.scss`
+- Файл (Изменен): `EcologyLK.Client/src/app/app.routes.ts` (Добавлены маршруты `/admin/*`)
+- Файл (Изменен): `EcologyLK.Client/src/app/app.ts` (Сделан `authService` public для шаблона)
+- Файл (Изменен): `EcologyLK.Client/src/app/app.html` (Добавлена ссылка "Админ-панель" в меню)
+
+### Предложение ИИ для следующего этапа:
+
+- Проект MVP теперь функционально завершен (API + UI, включая Админ-панель).
+- Следующим шагом (согласно ТЗ, п.7) может быть реализация **"Ручной правки требований"** (например, добавление API и UI для изменения `Deadline` или `Status` в `EcologicalRequirement`).
+- Либо, улучшение UI/UX, например, замена MVP-таблицы "Календаря" на полноценный графический календарь (с использованием `fullcalendar` или аналога).

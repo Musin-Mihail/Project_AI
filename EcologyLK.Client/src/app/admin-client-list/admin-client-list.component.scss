@@ -1,0 +1,131 @@
+/* Общие стили для админ-форм и таблиц */
+.admin-form {
+  margin: 1rem 0;
+  padding: 1.5rem;
+  background-color: #fdfdfd;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+
+  fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap; // Позволяет полям переноситься
+    gap: 1rem;
+    align-items: flex-end; // Выравнивает по нижнему краю
+  }
+
+  legend {
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 0;
+    margin-bottom: 1rem;
+    width: 100%; // На всю ширину
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex-grow: 1; // Поля растут
+    min-width: 150px; // Минимальная ширина
+  }
+
+  label {
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
+  input[type='text'],
+  input[type='email'],
+  input[type='number'],
+  select {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+
+  button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    height: fit-content; // По высоте контента
+
+    &:hover {
+      background-color: #0056b3;
+    }
+
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.table-container {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+
+  tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .action-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &.edit {
+      background-color: #ffc107;
+      color: #333;
+      &:hover {
+        background-color: #e0a800;
+      }
+    }
+  }
+}
+
+.error-message {
+  color: #d8000c;
+  background-color: #ffcccc;
+  border: 1px solid #d8000c;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}

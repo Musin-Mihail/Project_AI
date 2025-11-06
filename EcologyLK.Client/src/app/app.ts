@@ -10,7 +10,8 @@ import { CommonModule } from '@angular/common';
   styleUrl: './app.scss',
 })
 export class App {
-  private authService = inject(AuthService);
+  // (1) --- ИЗМЕНЕНО: Сделано public для доступа из шаблона (app.html) ---
+  public authService = inject(AuthService);
   private router = inject(Router);
 
   // Получаем сигнал о текущем пользователе из сервиса

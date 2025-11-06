@@ -1,0 +1,85 @@
+<h2>Админ-панель: Управление Пользователями</h2>
+
+<!-- Форма создания -->
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="admin-form">
+  <fieldset>
+    <legend>Создать нового пользователя</legend>
+    <div class="form-field">
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email" />
+    </div>
+    <div class="form-field">
+      <label for="password">Пароль</label>
+      <input id="password" type="text" formControlName="password" />
+    </div>
+    <div class="form-field">
+      <label for="fullName">ФИО</label>
+      <input id="fullName" type="text" formControlName="fullName" />
+    </div>
+    <div class="form-field">
+      <label for="clientId">Привязка к Клиенту (ЮрЛицу)</label>
+      <select id="clientId" formControlName="clientId">
+        <option [value]="null">Нет (Не привязан)</option>
+        @for(client of clients(); track client.id) {
+        <option [value]="client.id">{{ client.name }} (ID: {{ client.id }})</option>
+        }
+      </select>
+    </div>
+    <div class="form-field">
+      <label for="role">Роль</label>
+      <select id="role" formControlName="role">
+        <option value="Client">Client</option>
+        <option value="Admin">Admin</option>
+        <option value="Manager">Manager</option>
+      </select>
+    </div>
+
+    <button type="submit" [disabled]="userForm.invalid">Создать</button>
+  </fieldset>
+</form>
+
+@if (error()) {
+<div class="error-message">
+  {{ error() }}
+</div>
+}
+
+<!-- Список пользователей -->
+<h3>Список существующих пользователей</h3>
+
+@if (isLoading()) {
+<p>Загрузка пользователей...</p>
+}
+
+<div class="table-container">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Email</th>
+        <th>ФИО</th>
+        <th>Роли</th>
+        <th>Client ID</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (user of users(); track user.id) {
+      <tr>
+        <td>{{ user.id | slice: 0:8 }}...</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.fullName }}</td>
+        <td>{{ user.roles.join(', ') }}</td>
+        <td>{{ user.clientId ?? 'N/A' }}</td>
+        <td class="actions">
+          <button class="action-btn edit">Редактировать</button>
+        </td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="6">Пользователи не найдены.</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
