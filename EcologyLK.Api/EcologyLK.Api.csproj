@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
@@ -14,5 +14,10 @@
                           Version="9.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory"
                           Version="9.0.1" />
+        <!-- Добавлен ИИ: 
+            AutoMapper для преобразования (маппинга) 
+            между моделями данных (Entities) и объектами DTO. -->
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection"
+                          Version="12.0.1" />
     </ItemGroup>
 </Project>

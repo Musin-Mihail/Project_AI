@@ -1,11 +1,13 @@
 using EcologyLK.Api.Data;
 using EcologyLK.Api.Models;
+using EcologyLK.Api.Services; // Добавлено ИИ
+using EcologyLK.Api.Utils; // Добавлено ИИ
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- НАЧАЛО: Добавлено ИИ ---
+// --- НАЧАЛО: Изменения ИИ ---
 
 // 1. Определение политики CORS
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -32,7 +34,16 @@ builder
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
 
-// --- КОНЕЦ: Добавлено ИИ ---
+// 4. Регистрация сервиса генерации требований (Добавлено ИИ)
+builder.Services.AddScoped<IRequirementGenerationService, RequirementGenerationService>();
+
+// 5. Регистрация AutoMapper (Добавлено ИИ)
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+// 6. Регистрация Контроллеров (Добавлено ИИ)
+builder.Services.AddControllers();
+
+// --- КОНЕЦ: Изменения ИИ ---
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at [https://aka.ms/aspnet/openapi](https://aka.ms/aspnet/openapi)
@@ -48,13 +59,18 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// --- НАЧАЛО: Добавлено ИИ ---
+// --- НАЧАЛО: Изменения ИИ ---
 
-// 4. Включение CORS
+// 7. Включение CORS
 app.UseCors(MyAllowSpecificOrigins);
 
-// --- КОНЕЦ: Добавлено ИИ ---
+// 8. Подключение API контроллеров (Добавлено ИИ)
+app.MapControllers();
 
+// --- КОНЕЦ: Изменения ИИ ---
+
+// ----- НАЧАЛО: Удалено ИИ (старый пример WeatherForecast) -----
+/*
 var summaries = new[]
 {
     "Freezing",
@@ -85,10 +101,16 @@ app.MapGet(
         }
     )
     .WithName("GetWeatherForecast");
+*/
+// ----- КОНЕЦ: Удалено ИИ -----
 
 app.Run();
 
+// ----- НАЧАЛО: Удалено ИИ (старый record) -----
+/*
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
+*/
+// ----- КОНЕЦ: Удалено ИИ -----

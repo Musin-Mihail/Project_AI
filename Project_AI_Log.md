@@ -69,3 +69,37 @@
 1. Создать первый API-контроллер (`ClientSitesController`) с методами для создания `ClientSite` (DTO "Анкеты") и получения `ClientSite` с его "Картой требований" (`EcologicalRequirements`).
 2. Создать "Сервис генерации требований" (`RequirementGenerationService`), который будет вызываться при создании `ClientSite`. Этот сервис реализует бизнес-логику из файла `Критерии_для_формирования_требований_.docx.pdf` (создает нужные `EcologicalRequirement` в зависимости от `NvosCategory`, `WaterUseType` и `HasByproducts`).
 3. Начать создание UI в Angular: создать `ClientSiteService` для запросов к API и компонент "Анкеты" (`client-site-form.component.ts`) для создания новой площадки.
+
+### Этап 3: Реализация сервиса генерации требований и API-контроллера "Анкеты"
+
+### Действия ИИ:
+
+- Проанализировав ТЗ (`Критерии_для_формирования_требований_.docx.pdf`) и предложение из Этапа 2, ИИ реализовал **ключевую бизнес-логику MVP**.
+- **Действие 1 (Сервис):** Создан `RequirementGenerationService` (и интерфейс `IRequirementGenerationService`), который содержит C#-реализацию бизнес-правил из ТЗ. Сервис принимает параметры площадки (НВОС, вода, побочные продукты) и возвращает готовый `List<EcologicalRequirement>`.
+- **Действие 2 (DTOs):** Созданы Data Transfer Objects (DTOs) для "Анкеты" (`CreateClientSiteDto.cs`) и для отображения данных (`ClientSiteDto.cs`, `EcologicalRequirementDto.cs`), чтобы отделить API-модели от моделей базы данных.
+- **Действие 3 (AutoMapper):** В проект добавлен `AutoMapper` для автоматического преобразования DTO в Entities и обратно. Создан `MappingProfile.cs`.
+- **Действие 4 (API-Контроллер):** Создан `ClientSitesController.cs`. Он предоставляет два метода:
+  - `POST /api/ClientSites`: Принимает DTO "Анкеты" (`CreateClientSiteDto`), вызывает `RequirementGenerationService` для создания "Карты требований", сохраняет новую площадку и ее требования в БД и возвращает `201 Created`.
+  - `GET /api/ClientSites/{id}`: Получает площадку и ее "Карту требований" по ID.
+- **Действие 5 (Регистрация):** Все новые сервисы (`IRequirementGenerationService`, `AutoMapper`, `AddControllers`) зарегистрированы в `Program.cs`. Пример `WeatherForecast` удален.
+
+### Предложенные изменения/артефакты:
+
+- **Файл (Изменен):** `EcologyLK.Api/EcologyLK.Api.csproj` (Добавлен пакет AutoMapper)
+- **Файл (Изменен):** `EcologyLK.Api/Program.cs` (Удален WeatherForecast, зарегистрированы Controllers, AutoMapper и Service)
+- **Файл (Новый):** `EcologyLK.Api/DTOs/CreateClientSiteDto.cs` (DTO "Анкеты")
+- **Файл (Новый):** `EcologyLK.Api/DTOs/ClientSiteDto.cs` (DTO для отображения площадки)
+- **Файл (Новый):** `EcologyLK.Api/DTOs/EcologicalRequirementDto.cs` (DTO для отображения требования)
+- **Файл (Новый):** `EcologyLK.Api/Utils/MappingProfile.cs` (Настройки AutoMapper)
+- **Файл (Новый):** `EcologyLK.Api/Services/IRequirementGenerationService.cs` (Интерфейс сервиса)
+- **Файл (Новый):** `EcologyLK.Api/Services/RequirementGenerationService.cs` (Реализация сервиса с бизнес-логикой)
+- **Файл (Новый):** `EcologyLK.Api/Controllers/ClientSitesController.cs` (API-контроллер)
+
+### Предложение ИИ для следующего этага:
+
+- Backend API теперь полностью готово к приему "Анкет" и отображению "Карты требований".
+- Следующий логичный шаг — **реализация UI в Angular (`EcologyLK.Client`)** для использования этих API:
+  1. Создать сервис `HttpClientModule` и зарегистрировать его в `app.config.ts`.
+  2. Создать Angular-сервис (`client-site.service.ts`) для инкапсуляции HTTP-запросов к `POST /api/ClientSites` и `GET /api/ClientSites/{id}`.
+  3. Создать Angular-компонент "Анкеты" (`client-site-form.component.ts`) с формой (используя `ReactiveFormsModule`), которая будет отправлять данные на `POST` API.
+  4. Создать Angular-компонент "Карты требований" (`requirement-map.component.ts`), который будет получать ID площадки, вызывать `GET` API и отображать список требований в виде таблицы (как в ТЗ).
