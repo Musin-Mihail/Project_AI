@@ -23,6 +23,9 @@
       <tr>
         <th>Требование</th>
         <th>Основание</th>
+        <!-- === Добавлено ИИ (Этап 8) === -->
+        <th>Риски (Штраф)</th>
+        <!-- === Конец === -->
         <th>Статус</th>
         <th>Срок выполнения</th>
         <th>Ответственный</th>
@@ -34,6 +37,9 @@
       <tr>
         <td>{{ req.title }}</td>
         <td>{{ req.basis }}</td>
+        <!-- === Добавлено ИИ (Этап 8) === -->
+        <td class="risk-cell">{{ req.penaltyRisk ?? 'N/A' }}</td>
+        <!-- === Конец === -->
         <td [class]="'status-' + RequirementStatus[req.status].toLowerCase()">
           {{ getStatusText(req.status) }}
         </td>
@@ -43,7 +49,8 @@
       </tr>
       } @empty {
       <tr>
-        <td colspan="6">
+        <!-- === Изменено ИИ (Этап 8): colspan c 6 на 7 === -->
+        <td colspan="7">
           Для данной площадки не было сгенерировано ни одного требования.
         </td>
       </tr>

@@ -236,3 +236,25 @@
 
 - Реализованы три ключевых блока MVP: "Карта требований", "Артефакты" и "Календарь событий".
 - Следующим логичным шагом по ТЗ является реализация блока **"Риски"**. Это потребует обновления `EcologicalRequirement`, чтобы включить информацию о штрафах (например, `PenaltyBasis` (статья КоАП) и `PenaltyAmount` (сумма)). Затем необходимо будет создать API и UI (вероятно, как часть `requirement-map.component`) для отображения этой информации.
+
+### Этап 8: Реализация блока "Риски"
+
+### Действия ИИ:
+
+- Проанализировав ТЗ (п.1, требуется блок "Риски") и лог (Этапы 1-7 завершены), ИИ определил, что следующим шагом является реализация этого блока для MVP.
+- **Backend:** Модифицирована модель `EcologyLK.Api/Models/EcologicalRequirement.cs` (добавлено поле `PenaltyRisk`). Обновлен `EcologyLK.Api/Services/RequirementGenerationService.cs` для автоматического заполнения рисков (размера штрафа) при создании требования. Обновлен `EcologyLK.Api/DTOs/EcologicalRequirementDto.cs` для передачи этих данных в API.
+- **Frontend:** Обновлен `EcologyLK.Client/src/app/models.ts` (интерфейс `EcologicalRequirementDto`). Модифицирован `EcologyLK.Client/src/app/requirement-map/requirement-map.component.html` для отображения новой колонки "Риски (Штраф)" в "Карте требований".
+
+### Предложенные изменения/артефакты:
+
+- Файл (Изменен): `EcologyLK.Api/Models/EcologicalRequirement.cs` (Добавлено поле `PenaltyRisk`)
+- Файл (Изменен): `EcologyLK.Api/DTOs/EcologicalRequirementDto.cs` (Добавлено поле `PenaltyRisk`)
+- Файл (Изменен): `EcologyLK.Api/Services/RequirementGenerationService.cs` (Добавлена логика заполнения рисков)
+- Файл (Изменен): `EcologyLK.Client/src/app/models.ts` (Обновлен `EcologicalRequirementDto`)
+- Файл (Изменен): `EcologyLK.Client/src/app/requirement-map/requirement-map.component.html` (Добавлена колонка "Риски (Штраф)")
+- Файл (Изменен): `EcologyLK.Client/src/app/requirement-map/requirement-map.component.scss` (Добавлены стили для колонки рисков)
+
+### Предложение ИИ для следующего этапа:
+
+- Реализованы четыре из пяти основных блоков MVP: "Карта требований", "Артефакты", "Календарь событий" и "Риски".
+- Последним нереализованным блоком MVP из ТЗ (п.1) является **"Договора/счета/акты"**. Следующим шагом будет создание API в .NET и UI в Angular для управления этими финансовыми документами.

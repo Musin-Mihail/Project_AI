@@ -42,6 +42,14 @@
     color: #28a745; // Зеленый
     font-weight: bold;
   }
+
+  // --- Добавлено ИИ (Этап 8) ---
+  .risk-cell {
+    font-style: italic;
+    color: #666;
+    min-width: 150px; // Чтобы текст штрафа не переносился слишком сильно
+  }
+  // --- Конец ---
 }
 
 .error-message {

@@ -6,6 +6,12 @@ public class EcologicalRequirement
     public int Id { get; set; }
     public string Title { get; set; } = string.Empty; // Название требования (напр. "ПДВ/НДВ")
     public string Basis { get; set; } = string.Empty; // Основание (напр. "КоАП РФ 8.21 ч.1")
+
+    // --- Добавлено ИИ (Этап 8): Информация о Рисках ---
+    public string? PenaltyRisk { get; set; } // Описание риска (напр. "Штраф 100-200 тыс.")
+
+    // --- Конец ---
+
     public string? ResponsiblePerson { get; set; } // Ответственный
     public DateTime? Deadline { get; set; } // Срок выполнения
     public RequirementStatus Status { get; set; } = RequirementStatus.NotStarted;

@@ -10,6 +10,12 @@ public class EcologicalRequirementDto
     public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Basis { get; set; } = string.Empty;
+
+    // --- Добавлено ИИ (Этап 8) ---
+    public string? PenaltyRisk { get; set; }
+
+    // --- Конец ---
+
     public string? ResponsiblePerson { get; set; }
     public DateTime? Deadline { get; set; }
     public RequirementStatus Status { get; set; }

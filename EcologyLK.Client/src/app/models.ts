@@ -46,6 +46,11 @@ export interface EcologicalRequirementDto {
   id: number;
   title: string;
   basis: string;
+
+  // --- Добавлено ИИ (Этап 8) ---
+  penaltyRisk?: string;
+  // --- Конец ---
+
   responsiblePerson?: string;
   deadline?: Date;
   status: RequirementStatus;
