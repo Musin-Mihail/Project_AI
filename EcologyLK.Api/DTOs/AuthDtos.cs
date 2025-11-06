@@ -18,8 +18,7 @@ public class RegisterUserDto
     [Required]
     public string FullName { get; set; } = string.Empty;
 
-    [Required]
-    public int ClientId { get; set; }
+    public int? ClientId { get; set; }
 }
 
 /// <summary>

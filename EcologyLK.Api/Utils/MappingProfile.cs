@@ -37,5 +37,7 @@ public class MappingProfile : Profile
 
         // Модель Фин. Документа -> DTO для отображения
         CreateMap<FinancialDocument, FinancialDocumentDto>();
+        CreateMap<Client, ClientDto>();
+        CreateMap<CreateClientDto, Client>();
     }
 }

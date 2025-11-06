@@ -23,22 +23,81 @@
 
 (Здесь ты предоставляешь весь новый или измененный код, который я должен добавить в проект. Ты ОБЯЗАН всегда предоставлять этот блок с кодом. Используй блоки кода с указанием полного имени файла.)
 
+**ВНИМАНИЕ! ПРАВИЛО ПОЛНОГО КОДА:** Это самый важный пункт. Чтобы я мог четко отслеживать изменения, ты ОБЯЗАН:
+
+1. **НИКОГДА НЕ ИСПОЛЬЗОВАТЬ** в блоках кода сокращения, такие как `...`, `// ...` или `[... existing code ...]`.
+2. **ДЛЯ НОВЫХ ФАЙЛОВ (New):** Предоставлять **весь** код файла от `namespace` (или `using`) до последней закрывающей скобки `}`.
+3. **ДЛЯ ИЗМЕНЕННЫХ ФАЙЛОВ (Modified/Изменения):** Предоставлять **ВЕСЬ ПОЛНЫЙ ТЕКСТ** файла от первой до последней строки, а не только измененные строки (не "diff"). Я должен иметь возможность скопировать твой код и полностью заменить им старый файл
+
 Пример:
-EcologyLK.Api/Services/NewService.cs
+Пример: EcologyLK.Api/Services/NewService.cs (Новый) // ИИ ОБЯЗАН предоставить здесь ПОЛНЫЙ код нового файла
 
 ```
 namespace EcologyLK.Api.Services
 {
-   // ... весь код нового сервиса ...
+   public interface INewService
+   {
+       void DoWork();
+   }
+
+   public class NewService : INewService
+   {
+       public void DoWork()
+       {
+           var a = 1;
+           var b = 2;
+           var c = a + b;
+           Console.WriteLine(c);
+       }
+   }
 }
 ```
 
-EcologyLK.Api/Program.cs (Изменения)
+EcologyLK.Api/Program.cs (Изменения) // ИИ ОБЯЗАН предоставить здесь ВЕСЬ код файла Program.cs, от первой до последней строки, включив в него изменения.
 
 ```
-// ...
-builder.Services.AddScoped<INewService, NewService>(); // Добавленная строка
-// ...
+using EcologyLK.Api.Services;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System; // Пример другого using
+
+// Симуляция существующего сервиса для примера
+namespace EcologyLK.Api.Services {
+    public interface IOldService {}
+    public class OldService : IOldService {}
+}
+// Конец симуляции
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Добавление сервисов в контейнер.
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Пример другого сервиса, который уже был в коде
+builder.Services.AddScoped<IOldService, OldService>();
+
+// Вот добавленная строка, о которой ИИ говорил в логе:
+builder.Services.AddScoped<INewService, NewService>();
+
+var app = builder.Build();
+
+// Конфигурация HTTP-пайплайна.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
 ```
 
 ## **ЧАСТЬ 2: ЗАПИСЬ В ЖУРНАЛ (ДЛЯ Project_AI_Log.md)**
