@@ -1,17 +1,52 @@
 namespace EcologyLK.Api.Models;
 
-// Экологическое требование (из "Карты требований")
+/// <summary>
+/// Экологическое требование (одна строка из "Карты требований").
+/// </summary>
 public class EcologicalRequirement
 {
+    /// <summary>
+    /// Уникальный идентификатор.
+    /// </summary>
     public int Id { get; set; }
-    public string Title { get; set; } = string.Empty; // Название требования (напр. "ПДВ/НДВ")
-    public string Basis { get; set; } = string.Empty; // Основание (напр. "КоАП РФ 8.21 ч.1")
-    public string? PenaltyRisk { get; set; } // Описание риска (напр. "Штраф 100-200 тыс.")
-    public string? ResponsiblePerson { get; set; } // Ответственный
-    public DateTime? Deadline { get; set; } // Срок выполнения
+
+    /// <summary>
+    /// Название требования (напр. "ПДВ/НДВ").
+    /// </summary>
+    public string Title { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Основание (напр. "КоАП РФ 8.21 ч.1").
+    /// </summary>
+    public string Basis { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Описание риска (напр. "Штраф 100-200 тыс.").
+    /// </summary>
+    public string? PenaltyRisk { get; set; }
+
+    /// <summary>
+    /// Ответственный (ФИО).
+    /// </summary>
+    public string? ResponsiblePerson { get; set; }
+
+    /// <summary>
+    /// Срок выполнения.
+    /// </summary>
+    public DateTime? Deadline { get; set; }
+
+    /// <summary>
+    /// Текущий статус выполнения.
+    /// </summary>
     public RequirementStatus Status { get; set; } = RequirementStatus.NotStarted;
 
-    // Связь: Принадлежит одной площадке
+    /// <summary>
+    /// ID площадки, к которой относится требование.
+    /// </summary>
     public int ClientSiteId { get; set; }
+
+    /// <summary>
+    /// Навигационное свойство для ClientSite.
+    /// </summary>
     public ClientSite? ClientSite { get; set; }
 }

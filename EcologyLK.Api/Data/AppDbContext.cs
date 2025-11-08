@@ -4,25 +4,59 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EcologyLK.Api.Data;
 
-public class AppDbContext : IdentityDbContext<AppUser> // Используем IdentityDbContext
+/// <summary>
+/// Контекст базы данных Entity Framework Core.
+/// Использует IdentityDbContext для интеграции с ASP.NET Identity.
+/// </summary>
+public class AppDbContext : IdentityDbContext<AppUser>
 {
+    /// <summary>
+    /// Конструктор AppDbContext.
+    /// </summary>
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options) { }
 
-    // Регистрация наших моделей
+    /// <summary>
+    /// Клиенты (ЮрЛица).
+    /// </summary>
     public DbSet<Client> Clients { get; set; }
-    public DbSet<ClientSite> ClientSites { get; set; }
-    public DbSet<EcologicalRequirement> EcologicalRequirements { get; set; }
-    public DbSet<Artifact> Artifacts { get; set; }
-    public DbSet<FinancialDocument> FinancialDocuments { get; set; }
-    public DbSet<LegalAct> LegalActs { get; set; }
-    public DbSet<RequirementRule> RequirementRules { get; set; } // <-- ДОБАВЛЕНО
 
+    /// <summary>
+    /// Площадки клиентов.
+    /// </summary>
+    public DbSet<ClientSite> ClientSites { get; set; }
+
+    /// <summary>
+    /// Экологические требования ("Карта требований").
+    /// </summary>
+    public DbSet<EcologicalRequirement> EcologicalRequirements { get; set; }
+
+    /// <summary>
+    /// Артефакты (файлы).
+    /// </summary>
+    public DbSet<Artifact> Artifacts { get; set; }
+
+    /// <summary>
+    /// Финансовые документы (Договора, Счета, Акты).
+    /// </summary>
+    public DbSet<FinancialDocument> FinancialDocuments { get; set; }
+
+    /// <summary>
+    /// Справочник НПА (Нормативно-правовые акты).
+    /// </summary>
+    public DbSet<LegalAct> LegalActs { get; set; }
+
+    /// <summary>
+    /// Справочник "Правил генерации требований".
+    /// </summary>
+    public DbSet<RequirementRule> RequirementRules { get; set; }
+
+    /// <summary>
+    /// Настройка моделей и их связей (Fluent API).
+    /// </summary>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder); // Обязательно для Identity
-
-        // Настройка связей
 
         // Client -> ClientSite (Один ко многим)
         builder

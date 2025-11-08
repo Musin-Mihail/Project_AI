@@ -1,6 +1,8 @@
 namespace EcologyLK.Api.Models;
 
-// Категория объекта НВОС (Негативное Воздействие на Окружающую Среду)
+/// <summary>
+/// Категория объекта НВОС (Негативное Воздействие на Окружающую Среду).
+/// </summary>
 public enum NvosCategory
 {
     I,
@@ -9,36 +11,96 @@ public enum NvosCategory
     IV,
 }
 
-// Тип водопользования
+/// <summary>
+/// Тип водопользования.
+/// </summary>
 public enum WaterUseType
 {
-    None, // Нет
-    Well, // Скважина
-    River, // Река/Озеро
+    /// <summary>
+    /// Нет водопользования.
+    /// </summary>
+    None,
+
+    /// <summary>
+    /// Скважина.
+    /// </summary>
+    Well,
+
+    /// <summary>
+    /// Река/Озеро.
+    /// </summary>
+    River,
+
+    /// <summary>
+    /// Другое.
+    /// </summary>
     Other,
 }
 
-// Статус выполнения требования
+/// <summary>
+/// Статус выполнения требования.
+/// </summary>
 public enum RequirementStatus
 {
-    NotStarted, // Не выполнено
-    InProgress, // В работе
-    Completed, // Выполнено
+    /// <summary>
+    /// Не выполнено (в ТЗ).
+    /// </summary>
+    NotStarted,
+
+    /// <summary>
+    /// В работе (в ТЗ).
+    /// </summary>
+    InProgress,
+
+    /// <summary>
+    /// Выполнено (в ТЗ).
+    /// </summary>
+    Completed,
 }
 
-// Тип финансового документа
+/// <summary>
+/// Тип финансового документа.
+/// </summary>
 public enum FinancialDocumentType
 {
-    Contract, // Договор
-    Invoice, // Счет
-    Act, // Акт
+    /// <summary>
+    /// Договор.
+    /// </summary>
+    Contract,
+
+    /// <summary>
+    /// Счет.
+    /// </summary>
+    Invoice,
+
+    /// <summary>
+    /// Акт.
+    /// </summary>
+    Act,
 }
 
-// Статус финансового документа
+/// <summary>
+/// Статус финансового документа.
+/// </summary>
 public enum FinancialDocumentStatus
 {
-    Draft, // Черновик
-    Sent, // Отправлен
-    Paid, // Оплачен
-    Overdue, // Просрочен
+    /// <summary>
+    /// Черновик.
+    /// </summary>
+    Draft,
+
+    /// <summary>
+    /// Отправлен.
+    /// </summary>
+    Sent,
+
+    /// <summary>
+    /// Оплачен.
+    /// </summary>
+    Paid,
+
+    /// <summary>
+    /// Просрочен.
+    /// </summary>
+    Overdue,
 }

@@ -2,13 +2,24 @@ using Microsoft.AspNetCore.Identity;
 
 namespace EcologyLK.Api.Models;
 
-// Пользователь системы (Админ, Менеджер, Клиент)
+/// <summary>
+/// Пользователь системы (Админ, Менеджер, Клиент).
+/// Расширяет стандартный IdentityUser.
+/// </summary>
 public class AppUser : IdentityUser
 {
-    // Можно добавить доп. поля, например ФИО
+    /// <summary>
+    /// Полное имя пользователя (ФИО).
+    /// </summary>
     public string FullName { get; set; } = string.Empty;
 
-    // Связь с клиентом (если роль "Клиент" или "Менеджер")
+    /// <summary>
+    /// (Опционально) ID клиента (юрлица), к которому привязан пользователь.
+    /// </summary>
     public int? ClientId { get; set; }
+
+    /// <summary>
+    /// Навигационное свойство для Client.
+    /// </summary>
     public Client? Client { get; set; }
 }
