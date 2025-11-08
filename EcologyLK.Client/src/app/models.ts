@@ -214,3 +214,28 @@ export interface UpdateRequirementDto {
   deadline?: Date;
   responsiblePerson?: string;
 }
+
+// --- DTO ДЛЯ СПРАВОЧНИКА НПА (НОВОЕ) ---
+
+/**
+ * DTO для отображения НПА
+ * (Зеркало EcologyLK.Api/DTOs/LegalActDto.cs)
+ */
+export interface LegalActDto {
+  id: number;
+  title: string;
+  referenceCode: string;
+  description?: string;
+  externalLink?: string;
+}
+
+/**
+ * DTO для создания/обновления НПА
+ * (Зеркало EcologyLK.Api/DTOs/LegalActDto.cs)
+ */
+export interface CreateOrUpdateLegalActDto {
+  title: string;
+  referenceCode: string;
+  description?: string;
+  externalLink?: string;
+}

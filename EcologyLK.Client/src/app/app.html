@@ -23,13 +23,17 @@
     </a>
     <!-- TODO: Добавить ссылку на список площадок -->
 
-    <!-- (1) --- ДОБАВЛЕНО: Ссылки на Админ-панель --- -->
+    <!-- (1) --- Ссылки на Админ-панель --- -->
     @if (authService.hasRole('Admin')) {
     <a routerLink="/admin/users" routerLinkActive="active-link" class="admin-link">
       [Админ: Пользователи]
     </a>
     <a routerLink="/admin/clients" routerLinkActive="active-link" class="admin-link">
       [Админ: Клиенты]
+    </a>
+    <!-- (2) --- ДОБАВЛЕНА ССЫЛКА НА НПА --- -->
+    <a routerLink="/admin/legal-acts" routerLinkActive="active-link" class="admin-link">
+      [Админ: Справочник НПА]
     </a>
     }
   </nav>

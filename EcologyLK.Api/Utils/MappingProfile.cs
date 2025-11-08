@@ -37,7 +37,13 @@ public class MappingProfile : Profile
 
         // Модель Фин. Документа -> DTO для отображения
         CreateMap<FinancialDocument, FinancialDocumentDto>();
+
+        // DTOs/Models для Админ-панели
         CreateMap<Client, ClientDto>();
         CreateMap<CreateClientDto, Client>();
+
+        // DTOs/Models для Справочника НПА (НОВОЕ)
+        CreateMap<LegalAct, LegalActDto>();
+        CreateMap<CreateOrUpdateLegalActDto, LegalAct>();
     }
 }

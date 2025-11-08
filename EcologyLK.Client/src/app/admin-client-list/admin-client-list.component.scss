@@ -16,6 +16,18 @@
     align-items: flex-end; // Выравнивает по нижнему краю
   }
 
+  /* ДОБАВЛЕНО: Модификатор для вертикальной формы */
+  fieldset.vertical-form {
+    flex-direction: column;
+    align-items: stretch; // Растягиваем поля
+    gap: 1rem;
+
+    button {
+      align-self: flex-start; // Кнопка не растягивается
+    }
+  }
+  /* --- Конец добавленного блока --- */
+
   legend {
     font-weight: bold;
     font-size: 1.2rem;
@@ -116,6 +128,14 @@
       color: #333;
       &:hover {
         background-color: #e0a800;
+      }
+    }
+
+    /* ДОБАВЛЕНО: Стиль для кнопки удаления */
+    &.delete {
+      background-color: #dc3545;
+      &:hover {
+        background-color: #c82333;
       }
     }
   }

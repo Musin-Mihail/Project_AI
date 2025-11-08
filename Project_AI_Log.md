@@ -497,3 +497,39 @@
 - Проект MVP теперь функционально завершен, включая все 5 блоков и "Админ-панель" с ручным редактированием.
 - Следующим логичным шагом (согласно ТЗ, п.7 "Админ-панель") является реализация управления **"Справочниками"** (например, НПА, правила построения требований).
 - Альтернативно, можно начать улучшение UI/UX, например, заменить MVP-таблицу "Календаря" на полноценный графический календарь (с использованием `fullcalendar` или аналога), как предлагалось в Этапе 16.
+
+### Этап 18: Реализация "Справочника НПА" (API + UI Админ-панели)
+
+### Действия ИИ:
+
+- Проанализировав ТЗ (п.7 "Админ-панель") и лог (Этап 17 завершил "Ручную правку"), ИИ определил, что последним нереализованным блоком админ-панели является управление **"Справочниками"**.
+- **Backend (.NET):** ИИ реализовал первый справочник "НПА" (Нормативно-правовые акты).
+  - Создана модель `LegalAct.cs` и DTO `LegalActDto.cs`.
+  - Модель зарегистрирована в `AppDbContext.cs` и `MappingProfile.cs`.
+  - Создан `LegalActsController.cs`. Эндпоинт `GET` (получение списка) доступен всем (`[Authorize]`), а `POST`, `PUT`, `DELETE` (управление) доступны только Администраторам (`[Authorize(Roles = "Admin")]`).
+- **Frontend (Angular):** ИИ реализовал UI для управления справочником НПА.
+  - Обновлен `models.ts` (добавлен `LegalActDto`).
+  - Создан `legal-act.service.ts` для вызова API.
+  - Создан компонент `admin-legal-act-list.component` (список НПА и форма создания/удаления).
+  - Добавлен маршрут `/admin/legal-acts` (защищен `adminGuard`) и ссылка в главное меню `app.html` (видна только 'Admin').
+
+### Предложенные изменения/артефакты:
+
+- Файл (Новый): `EcologyLK.Api/Models/LegalAct.cs`
+- Файл (Изменен): `EcologyLK.Api/Data/AppDbContext.cs`
+- Файл (Новый): `EcologyLK.Api/DTOs/LegalActDto.cs`
+- Файл (Изменен): `EcologyLK.Api/Utils/MappingProfile.cs`
+- Файл (Новый): `EcologyLK.Api/Controllers/LegalActsController.cs`
+- Файл (Изменен): `EcologyLK.Client/src/app/models.ts`
+- Файл (Новый): `EcologyLK.Client/src/app/legal-act.service.ts`
+- Файл (Новый): `EcologyLK.Client/src/app/admin-legal-act-list/admin-legal-act-list.component.ts`
+- Файл (Новый): `EcologyLK.Client/src/app/admin-legal-act-list/admin-legal-act-list.component.html`
+- Файл (Изменен): `EcologyLK.Client/src/app/admin-client-list/admin-client-list.component.scss` (Добавлен стиль `vertical-form`)
+- Файл (Изменен): `EcologyLK.Client/src/app/app.routes.ts`
+- Файл (Изменен): `EcologyLK.Client/src/app/app.html`
+
+### Предложение ИИ для следующего этапа:
+
+- Проект MVP теперь полностью функционально завершен, включая "Справочник НПА".
+- Следующим логичным шагом может быть улучшение UX/UI, как предлагалось ранее: **замена MVP-таблицы "Календаря"** на полноценный графический календарь (с использованием `fullcalendar` или аналога).
+- Альтернативно, можно начать реализацию более сложной части "Справочников" из ТЗ (п.7): **"Правила построения требований"**. Это потребует рефакторинга `RequirementGenerationService` для использования правил из БД, а не из C#-кода.
