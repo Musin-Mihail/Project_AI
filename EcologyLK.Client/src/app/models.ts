@@ -217,7 +217,7 @@ export interface UpdateRequirementDto {
   responsiblePerson?: string;
 }
 
-// --- DTO ДЛЯ СПРАВОЧНИКА НПА (НОВОЕ) ---
+// --- DTO ДЛЯ СПРАВОЧНИКА НПА ---
 
 /**
  * DTO для отображения НПА
@@ -240,4 +240,43 @@ export interface CreateOrUpdateLegalActDto {
   referenceCode: string;
   description?: string;
   externalLink?: string;
+}
+
+// --- DTO ДЛЯ СПРАВОЧНИКА ПРАВИЛ (НОВОЕ) ---
+
+/**
+ * DTO для отображения Правила генерации
+ * (Зеркало EcologyLK.Api/DTOs/RequirementRuleDto.cs)
+ */
+export interface RequirementRuleDto {
+  id: number;
+  description: string;
+  triggerNvosCategoryI?: boolean;
+  triggerNvosCategoryII?: boolean;
+  triggerNvosCategoryIII?: boolean;
+  triggerNvosCategoryIV?: boolean;
+  triggerWaterUseType?: WaterUseType;
+  triggerHasByproducts?: boolean;
+  generatedTitle: string;
+  generatedBasis: string;
+  generatedPenaltyRisk?: string;
+  isActive: boolean;
+}
+
+/**
+ * DTO для создания/обновления Правила генерации
+ * (Зеркало EcologyLK.Api/DTOs/RequirementRuleDto.cs)
+ */
+export interface CreateOrUpdateRuleDto {
+  description: string;
+  triggerNvosCategoryI?: boolean;
+  triggerNvosCategoryII?: boolean;
+  triggerNvosCategoryIII?: boolean;
+  triggerNvosCategoryIV?: boolean;
+  triggerWaterUseType?: WaterUseType;
+  triggerHasByproducts?: boolean;
+  generatedTitle: string;
+  generatedBasis: string;
+  generatedPenaltyRisk?: string;
+  isActive: boolean;
 }

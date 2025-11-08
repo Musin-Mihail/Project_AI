@@ -1,0 +1,159 @@
+<h2>Админ-панель: Справочник Правил генерации требований</h2>
+<p>
+  Внимание: Этот раздел управляет "движком" генерации требований.
+  Изменения повлияют на все новые "Анкеты".
+</p>
+
+<!-- Форма создания/редактирования -->
+<form [formGroup]="ruleForm" (ngSubmit)="onSubmit()" class="admin-form">
+  <fieldset class="vertical-form">
+    <legend>{{ formTitle() }}</legend>
+
+    <!-- Описание -->
+    <div class="form-field">
+      <label for="description">Описание (для Админа)</label>
+      <input id="description" type="text" formControlName="description" />
+    </div>
+
+    <!-- Блок Триггеров -->
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="triggerNvosCategoryI">Категория I</label>
+        <select id="triggerNvosCategoryI" formControlName="triggerNvosCategoryI">
+          @for(opt of boolTriggerOptions; track opt.value) {
+          <option [value]="opt.value">{{ opt.text }}</option>
+          }
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="triggerNvosCategoryII">Категория II</label>
+        <select id="triggerNvosCategoryII" formControlName="triggerNvosCategoryII">
+          @for(opt of boolTriggerOptions; track opt.value) {
+          <option [value]="opt.value">{{ opt.text }}</option>
+          }
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="triggerNvosCategoryIII">Категория III</label>
+        <select id="triggerNvosCategoryIII" formControlName="triggerNvosCategoryIII">
+          @for(opt of boolTriggerOptions; track opt.value) {
+          <option [value]="opt.value">{{ opt.text }}</option>
+          }
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="triggerNvosCategoryIV">Категория IV</label>
+        <select id="triggerNvosCategoryIV" formControlName="triggerNvosCategoryIV">
+          @for(opt of boolTriggerOptions; track opt.value) {
+          <option [value]="opt.value">{{ opt.text }}</option>
+          }
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="triggerWaterUseType">Водопользование</label>
+        <select id="triggerWaterUseType" formControlName="triggerWaterUseType">
+          <option value="null">Не применять</option>
+          @for(opt of waterUseOptions; track opt.value) {
+          <option [value]="opt.value">{{ opt.key }}</option>
+          }
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="triggerHasByproducts">Побоч. продукт</label>
+        <select id="triggerHasByproducts" formControlName="triggerHasByproducts">
+          @for(opt of boolTriggerOptions; track opt.value) {
+          <option [value]="opt.value">{{ opt.text }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <!-- Блок Результата -->
+    <div class="form-field">
+      <label for="generatedTitle">Название требования (Результат)</label>
+      <input id="generatedTitle" type="text" formControlName="generatedTitle" />
+    </div>
+    <div class="form-field">
+      <label for="generatedBasis">Основание (Результат)</label>
+      <input id="generatedBasis" type="text" formControlName="generatedBasis" />
+    </div>
+    <div class="form-field">
+      <label for="generatedPenaltyRisk">Риск/Штраф (Результат)</label>
+      <input id="generatedPenaltyRisk" type="text" formControlName="generatedPenaltyRisk" />
+    </div>
+
+    <!-- Статус -->
+    <div class="form-field checkbox">
+      <input id="isActive" type="checkbox" formControlName="isActive" />
+      <label for="isActive">Правило Активно</label>
+    </div>
+
+    <!-- Кнопки -->
+    <div>
+      <button type="submit" [disabled]="ruleForm.invalid">Сохранить</button>
+      @if (editingRuleId()) {
+      <button type="button" (click)="onCancelEdit()" class="btn-secondary">
+        Отмена (Создать новое)
+      </button>
+      }
+    </div>
+  </fieldset>
+</form>
+
+@if (error()) {
+<div class="error-message">
+  {{ error() }}
+</div>
+}
+
+<!-- Список НПА -->
+<h3>Список существующих правил ({{ rules().length }})</h3>
+
+@if (isLoading()) {
+<p>Загрузка правил...</p>
+}
+
+<div class="table-container">
+  <table class="admin-table rule-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Описание</th>
+        <th>Триггеры</th>
+        <th>Результат (Название)</th>
+        <th>Активно</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (rule of rules(); track rule.id) {
+      <tr>
+        <td>{{ rule.id }}</td>
+        <td>{{ rule.description }}</td>
+        <td class="triggers">
+          <!-- Отображаем только активные триггеры для краткости -->
+          @if(rule.triggerNvosCategoryI) { <span>Кат. I</span> }
+          @if(rule.triggerNvosCategoryII) { <span>Кат. II</span> }
+          @if(rule.triggerNvosCategoryIII) { <span>Кат. III</span> }
+          @if(rule.triggerNvosCategoryIV) { <span>Кат. IV</span> }
+          @if(rule.triggerWaterUseType === 1) { <span>Скважина</span> }
+          @if(rule.triggerWaterUseType === 2) { <span>Река</span> }
+          @if(rule.triggerHasByproducts) { <span>Побоч. пр.</span> }
+        </td>
+        <td>{{ rule.generatedTitle | slice: 0:50 }}...</td>
+        <td>{{ rule.isActive ? 'Да' : 'Нет' }}</td>
+        <td class="actions">
+          <button class="action-btn edit" (click)="onEdit(rule)">Редакт.</button>
+          <button class="action-btn delete" (click)="onDelete(rule)">
+            Удалить
+          </button>
+        </td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="6">Справочник правил пуст. (Ошибка Seeding?)</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>

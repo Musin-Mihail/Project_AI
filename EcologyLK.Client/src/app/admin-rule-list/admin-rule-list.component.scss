@@ -1,0 +1,53 @@
+/*
+  Этот компонент использует общие стили из
+  '../admin-client-list/admin-client-list.component.scss',
+  которые указаны в 'styleUrl' компонента .ts
+*/
+
+/* Специфичные стили для этого компонента */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.rule-table {
+  /* Уменьшаем отступы для компактности */
+  th,
+  td {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .triggers {
+    font-size: 0.8rem;
+    color: #333;
+    span {
+      display: inline-block;
+      background-color: #e9ecef;
+      padding: 2px 5px;
+      border-radius: 4px;
+      margin: 2px;
+      white-space: nowrap;
+    }
+  }
+}
+
+.checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+button.btn-secondary {
+  margin-left: 0.5rem;
+  background-color: #e9ecef;
+  color: #333;
+  &:hover {
+    background-color: #d1d5db;
+  }
+}

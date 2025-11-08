@@ -7,7 +7,8 @@ import { authGuard } from './auth.guard';
 import { adminGuard } from './admin.guard'; // (1) Импортируем новый guard
 import { AdminUserListComponent } from './admin-user-list/admin-user-list.component'; // (2) Импорт
 import { AdminClientListComponent } from './admin-client-list/admin-client-list.component'; // (3) Импорт
-import { AdminLegalActListComponent } from './admin-legal-act-list/admin-legal-act-list.component'; // (4) НОВЫЙ ИМПОРТ
+import { AdminLegalActListComponent } from './admin-legal-act-list/admin-legal-act-list.component'; // (4) Импорт
+import { AdminRuleListComponent } from './admin-rule-list/admin-rule-list.component'; // (5) НОВЫЙ ИМПОРТ
 
 export const routes: Routes = [
   // Публичный маршрут для Входа
@@ -28,8 +29,13 @@ export const routes: Routes = [
     canActivate: [authGuard, adminGuard],
   },
   {
-    path: 'admin/legal-acts', // (5) НОВЫЙ МАРШРУТ
+    path: 'admin/legal-acts',
     component: AdminLegalActListComponent,
+    canActivate: [authGuard, adminGuard],
+  },
+  {
+    path: 'admin/rules', // (6) НОВЫЙ МАРШРУТ
+    component: AdminRuleListComponent,
     canActivate: [authGuard, adminGuard],
   },
 

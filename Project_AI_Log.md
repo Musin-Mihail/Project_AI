@@ -591,3 +591,31 @@
   2. Создать компонент `admin-rule-list.component` (защищен `adminGuard`).
   3. Добавить маршрут `/admin/rules` и ссылку в `app.html` (только для 'Admin').
 - **После** создания UI, следующим (и последним) шагом будет **рефакторинг `RequirementGenerationService`** для использования правил из БД вместо C#-кода.
+
+### Этап 21: Реализация UI "Справочника Правил" (Frontend)
+
+### Действия ИИ:
+
+- Проанализировав ТЗ (п.7, "Админ-панель", "правила построения требований") и лог (Этап 20 завершил API и Seeding), ИИ определил, что следующим шагом является реализация **Frontend-интерфейса** для администрирования `RequirementRules`.
+- **Действие 1 (Модель):** Обновлен `models.ts` для включения `RequirementRuleDto` и `CreateOrUpdateRuleDto`.
+- **Действие 2 (Сервис):** Создан `requirement-rule.service.ts` (Admin only) для вызова эндпоинтов `GET`, `POST`, `PUT`, `DELETE` контроллера `RequirementRulesController`.
+- **Действие 3 (Компонент):** Создан `admin-rule-list.component` (ts/html/scss). Компонент включает сложную форму `ReactiveFormsModule` для создания/редактирования правил (с обработкой nullable booleans (`bool?`) через `<select>`) и таблицу для отображения всех 23+ правил, загруженных из БД.
+- **Действие 4 (Интеграция):** Обновлен `app.routes.ts` для добавления маршрута `/admin/rules` (защищен `adminGuard`). Обновлен `app.html` для добавления ссылки "\[Админ: Справочник Правил]" в главное меню (видна только 'Admin').
+
+### Предложенные изменения/артефакты:
+
+- Файл (Изменен): `EcologyLK.Client/src/app/models.ts` (Добавлены DTO для `RequirementRule`)
+- Файл (Новый): `EcologyLK.Client/src/app/requirement-rule.service.ts` (Сервис API)
+- Файл (Новый): `EcologyLK.Client/src/app/admin-rule-list/admin-rule-list.component.ts` (Логика компонента)
+- Файл (Новый): `EcologyLK.Client/src/app/admin-rule-list/admin-rule-list.component.html` (Шаблон компонента)
+- Файл (Новый): `EcologyLK.Client/src/app/admin-rule-list/admin-rule-list.component.scss` (Стили компонента)
+- Файл (Изменен): `EcologyLK.Client/src/app/app.routes.ts` (Добавлен маршрут `/admin/rules`)
+- Файл (Изменен): `EcologyLK.Client/src/app/app.html` (Добавлена ссылка в меню)
+
+### Предложение ИИ для следующего этапа:
+
+- API и UI для "Справочника Правил" теперь полностью готовы. Администратор может управлять "движком" генерации.
+- Следующим (и, вероятно, **финальным**) шагом является **рефакторинг `EcologyLK.Api/Services/RequirementGenerationService.cs`**. Необходимо удалить всю C#-логику (hardcode `if/switch`) и заменить ее новой логикой, которая:
+  1. Загружает `List<RequirementRule>` из `AppDbContext`.
+  2. Циклически применяет каждое `rule` к параметрам "Анкеты" (`NvosCategory`, `WaterUseType` и т.д.).
+  3. Генерирует `EcologicalRequirement` на основе `rule.GeneratedTitle` и `rule.GeneratedBasis`.
