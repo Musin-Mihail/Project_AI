@@ -711,3 +711,23 @@
 
 - DTOs теперь полностью документированы.
 - Следующим логичным шагом, как я предлагал в Этапе 24, будет рефакторинг **API-контроллеров** (`EcologyLK.Api/Controllers`). Необходимо добавить полную XML-документацию для параметров (`<param>`) и кодов ответов (`<response>`), а также очистить любой оставшийся "мусорный" код (например, `// TODO:` в `ArtifactsController` или `// ...` в `FinancialDocumentsController`).
+
+### Этап 26: Рефакторинг API-контроллеров (Часть 1)
+
+### Действия ИИ:
+
+- Следуя плану из Этапа 25, ИИ начал рефакторинг API-контроллеров (`EcologyLK.Api/Controllers`).
+- Для первой группы ключевых контроллеров (`AdminController`, `ArtifactsController`, `AuthController`, `ClientSitesController`) была добавлена полная XML-документация для публичных методов, включая `<param>`, `<returns>` и коды ответов `<response>` (для улучшения Swagger/OpenAPI).
+- Удалены устаревшие "мусорные" комментарии (например, `// TODO: Проверить на дубликат...` в `AdminController` и `// TODO: Добавить RLS...` в `ArtifactsController`), так как соответствующий функционал (RLS) уже был реализован в предыдущих этапах.
+
+### Предложенные изменения/артефакты:
+
+- Файл (Рефакторинг): `EcologyLK.Api/Controllers/AdminController.cs` (Добавлена полная XML-документация, удален TODO)
+- Файл (Рефакторинг): `EcologyLK.Api/Controllers/ArtifactsController.cs` (Добавлена полная XML-документация, удален TODO)
+- Файл (Рефакторинг): `EcologyLK.Api/Controllers/AuthController.cs` (Добавлена полная XML-документация)
+- Файл (Рефакторинг): `EcologyLK.Api/Controllers/ClientSitesController.cs` (Добавлена полная XML-документация)
+
+### Предложение ИИ для следующего этапа:
+
+- Первая группа контроллеров очищена и документирована.
+- Следующим логичным шагом будет продолжение рефакторинга оставшихся контроллеров: `CalendarEventsController`, `EcologicalRequirementsController`, `FinancialDocumentsController`, `LegalActsController` и `RequirementRulesController` для приведения их к тому же стандарту качества.

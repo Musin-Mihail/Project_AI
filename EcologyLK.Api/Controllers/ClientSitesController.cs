@@ -16,12 +16,16 @@ namespace EcologyLK.Api.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
+[Produces("application/json")]
 public class ClientSitesController : ControllerBase
 {
     private readonly AppDbContext _context;
     private readonly IMapper _mapper;
     private readonly IRequirementGenerationService _requirementService;
 
+    /// <summary>
+    /// Конструктор ClientSitesController
+    /// </summary>
     public ClientSitesController(
         AppDbContext context,
         IMapper mapper,
@@ -38,7 +42,19 @@ public class ClientSitesController : ControllerBase
     /// Создает новую площадку клиента ("Анкета")
     /// и автоматически генерирует для нее "Карту требований".
     /// </summary>
+    /// <param name="createDto">DTO "Анкеты"</param>
+    /// <returns>Созданный DTO площадки</returns>
+    /// <response code="201">Возвращает созданную площадку</response>
+    /// <response code="400">Ошибка валидации</response>
+    /// <response code="401">Пользователь не аутентифицирован</response>
+    /// <response code="403">Доступ запрещен (попытка создать площадку для другого ClientId)</response>
+    /// <response code="404">Указанный ClientId не найден</response>
     [HttpPost]
+    [ProducesResponseType(typeof(ClientSiteDto), 201)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> CreateClientSite([FromBody] CreateClientSiteDto createDto)
     {
         var userClientId = User.GetClientId();
@@ -76,7 +92,17 @@ public class ClientSitesController : ControllerBase
     /// GET: api/ClientSites/{id}
     /// Получает площадку клиента по ID, включая "Карту требований".
     /// </summary>
+    /// <param name="id">ID площадки</param>
+    /// <returns>DTO площадки</returns>
+    /// <response code="200">Возвращает DTO площадки</response>
+    /// <response code="401">Пользователь не аутентифицирован</response>
+    /// <response code="403">Доступ к данной площадке запрещен (RLS)</response>
+    /// <response code="404">Площадка не найдена</response>
     [HttpGet("{id}")]
+    [ProducesResponseType(typeof(ClientSiteDto), 200)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(404)]
     public async Task<ActionResult<ClientSiteDto>> GetClientSiteById(int id)
     {
         var site = await _context

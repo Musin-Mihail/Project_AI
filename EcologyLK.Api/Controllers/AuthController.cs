@@ -11,6 +11,7 @@ namespace EcologyLK.Api.Controllers;
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
+[Produces("application/json")]
 public class AuthController : ControllerBase
 {
     private readonly UserManager<AppUser> _userManager;
@@ -20,6 +21,9 @@ public class AuthController : ControllerBase
     // Роль по умолчанию для новых регистраций
     private const string DefaultRole = "Client";
 
+    /// <summary>
+    /// Конструктор AuthController
+    /// </summary>
     public AuthController(
         UserManager<AppUser> userManager,
         IAuthTokenService tokenService,
@@ -35,7 +39,13 @@ public class AuthController : ControllerBase
     /// POST: api/Auth/Register
     /// Регистрирует нового пользователя
     /// </summary>
+    /// <param name="registerDto">DTO с данными для регистрации</param>
+    /// <returns>Сообщение об успехе</returns>
+    /// <response code="200">Пользователь успешно зарегистрирован</response>
+    /// <response code="400">Пользователь уже существует или ошибка валидации</response>
     [HttpPost("Register")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     public async Task<IActionResult> Register([FromBody] RegisterUserDto registerDto)
     {
         var userExists = await _userManager.FindByEmailAsync(registerDto.Email);
@@ -79,7 +89,13 @@ public class AuthController : ControllerBase
     /// POST: api/Auth/Login
     /// Выполняет вход пользователя и возвращает JWT
     /// </summary>
+    /// <param name="loginDto">DTO с данными для входа</param>
+    /// <returns>DTO с данными пользователя и JWT</returns>
+    /// <response code="200">Успешный вход, возвращает AuthResponseDto</response>
+    /// <response code="401">Неверный Email или пароль</response>
     [HttpPost("Login")]
+    [ProducesResponseType(typeof(AuthResponseDto), 200)]
+    [ProducesResponseType(401)]
     public async Task<ActionResult<AuthResponseDto>> Login([FromBody] LoginUserDto loginDto)
     {
         var user = await _userManager.FindByEmailAsync(loginDto.Email);

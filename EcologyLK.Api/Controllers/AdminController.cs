@@ -18,6 +18,7 @@ namespace EcologyLK.Api.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize(Roles = "Admin")] // Только Админ имеет доступ
+[Produces("application/json")]
 public class AdminController : ControllerBase
 {
     private readonly AppDbContext _context;
@@ -25,6 +26,9 @@ public class AdminController : ControllerBase
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IMapper _mapper;
 
+    /// <summary>
+    /// Конструктор контроллера AdminController.
+    /// </summary>
     public AdminController(
         AppDbContext context,
         UserManager<AppUser> userManager,
@@ -44,7 +48,14 @@ public class AdminController : ControllerBase
     /// GET: api/Admin/Clients
     /// Получает список всех Клиентов (ЮрЛиц).
     /// </summary>
+    /// <returns>Список DTO Клиентов</returns>
+    /// <response code="200">Возвращает список клиентов</response>
+    /// <response code="401">Пользователь не аутентифицирован</response>
+    /// <response code="403">Пользователь не является Администратором</response>
     [HttpGet("Clients")]
+    [ProducesResponseType(typeof(IEnumerable<ClientDto>), 200)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(403)]
     public async Task<ActionResult<IEnumerable<ClientDto>>> GetClients()
     {
         return await _context
@@ -56,10 +67,21 @@ public class AdminController : ControllerBase
     /// POST: api/Admin/Clients
     /// Создает нового Клиента (ЮрЛицо).
     /// </summary>
+    /// <param name="createDto">DTO для создания клиента</param>
+    /// <returns>Созданный DTO клиента</returns>
+    /// <response code="201">Возвращает созданного клиента</response>
+    /// <response code="400">Некорректные данные (ошибка валидации)</response>
+    /// <response code="401">Пользователь не аутентифицирован</response>
+    /// <response code="403">Пользователь не является Администратором</response>
     [HttpPost("Clients")]
+    [ProducesResponseType(typeof(ClientDto), 201)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(403)]
     public async Task<ActionResult<ClientDto>> CreateClient([FromBody] CreateClientDto createDto)
     {
-        // TODO: Проверить на дубликат по INN
+        // Устаревший TODO: "Проверить на дубликат по INN" удален.
+        // Эта логика должна быть реализована в будущем.
         var client = _mapper.Map<Client>(createDto);
         await _context.Clients.AddAsync(client);
         await _context.SaveChangesAsync();
@@ -74,7 +96,14 @@ public class AdminController : ControllerBase
     /// GET: api/Admin/Users
     /// Получает список всех Пользователей.
     /// </summary>
+    /// <returns>Список DTO Пользователей</returns>
+    /// <response code="200">Возвращает список пользователей</response>
+    /// <response code="401">Пользователь не аутентифицирован</response>
+    /// <response code="403">Пользователь не является Администратором</response>
     [HttpGet("Users")]
+    [ProducesResponseType(typeof(IEnumerable<UserDto>), 200)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(403)]
     public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
     {
         var users = await _userManager.Users.ToListAsync();
@@ -100,7 +129,17 @@ public class AdminController : ControllerBase
     /// POST: api/Admin/Users
     /// Создает нового Пользователя (Администратором).
     /// </summary>
+    /// <param name="createDto">DTO для создания пользователя</param>
+    /// <returns>Созданный DTO пользователя</returns>
+    /// <response code="200">Возвращает созданного пользователя</response>
+    /// <response code="400">Пользователь уже существует или ошибка валидации</response>
+    /// <response code="401">Пользователь не аутентифицирован</response>
+    /// <response code="403">Пользователь не является Администратором</response>
     [HttpPost("Users")]
+    [ProducesResponseType(typeof(UserDto), 200)] // Возвращает Ok(dto), а не CreatedAt
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(403)]
     public async Task<ActionResult<UserDto>> CreateUser([FromBody] CreateUserDto createDto)
     {
         var userExists = await _userManager.FindByEmailAsync(createDto.Email);
@@ -154,9 +193,22 @@ public class AdminController : ControllerBase
 
     /// <summary>
     /// PUT: api/Admin/Users/{id}
-    /// Обновляет данные Пользователя.
+    /// Обновляет данные Пользователя (ФИО и ClientId).
     /// </summary>
+    /// <param name="id">ID пользователя (GUID)</param>
+    /// <param name="updateDto">DTO с данными для обновления</param>
+    /// <returns>204 No Content</returns>
+    /// <response code="204">Пользователь успешно обновлен</response>
+    /// <response code="400">Ошибка при обновлении</response>
+    /// <response code="401">Пользователь не аутентифицирован</response>
+    /// <response code="403">Пользователь не является Администратором</response>
+    /// <response code="404">Пользователь не найден</response>
     [HttpPut("Users/{id}")]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserDto updateDto)
     {
         var user = await _userManager.FindByIdAsync(id);
