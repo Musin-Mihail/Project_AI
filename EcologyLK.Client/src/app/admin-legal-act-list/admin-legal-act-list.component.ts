@@ -20,18 +20,23 @@ export class AdminLegalActListComponent implements OnInit {
   isLoading = signal(true);
   error = signal<string | null>(null);
 
-  // Форма для создания/редактирования
+  /**
+   * Форма для создания/редактирования НПА
+   */
   actForm = this.fb.group({
     title: ['', [Validators.required, Validators.maxLength(500)]],
     referenceCode: ['', [Validators.required, Validators.maxLength(100)]],
     description: ['', [Validators.maxLength(1000)]],
-    externalLink: ['', [Validators.maxLength(500)]], // TODO: Add URL validator
+    externalLink: ['', [Validators.maxLength(500)]], // TODO (Refactoring): Add URL validator
   });
 
   ngOnInit() {
     this.loadActs();
   }
 
+  /**
+   * Загружает список НПА с сервера
+   */
   loadActs() {
     this.isLoading.set(true);
     this.legalActService.getLegalActs().subscribe({
@@ -46,6 +51,9 @@ export class AdminLegalActListComponent implements OnInit {
     });
   }
 
+  /**
+   * Вызывается при отправке формы (создание или редактирование)
+   */
   onSubmit() {
     if (this.actForm.invalid) {
       this.error.set('Форма заполнена некорректно.');
@@ -60,8 +68,8 @@ export class AdminLegalActListComponent implements OnInit {
       externalLink: this.actForm.value.externalLink || undefined,
     };
 
-    // TODO: Добавить логику редактирования (PUT)
-    // Сейчас реализовано только создание (POST)
+    // TODO (Refactoring): Логика редактирования (PUT) не реализована в этом MVP
+    // Удален устаревший комментарий // TODO: Добавить логику редактирования (PUT)
 
     this.legalActService.createLegalAct(dto).subscribe({
       next: (newAct) => {
@@ -74,6 +82,10 @@ export class AdminLegalActListComponent implements OnInit {
     });
   }
 
+  /**
+   * Вызывается при нажатии кнопки "Удалить"
+   * @param act DTO НПА для удаления
+   */
   onDelete(act: LegalActDto) {
     if (!confirm(`Вы уверены, что хотите удалить ${act.referenceCode}?`)) {
       return;

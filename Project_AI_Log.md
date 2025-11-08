@@ -814,3 +814,23 @@
 
 - Весь сервисный слой Frontend (`*.service.ts`) теперь полностью очищен и документирован.
 - Следующим логичным шагом является рефакторинг **компонентов Angular (`*.component.ts`)**. Необходимо провести ревизию `*.component.ts` файлов на предмет "мусорных" комментариев (`// TODO: ...`), добавления JSDoc для `public` методов (например, `onSubmit()`, `onDelete()`) и, при необходимости, упрощения логики. Начать следует с компонентов "Админ-панели".
+
+### Этап 31: Рефакторинг Frontend (Компоненты Админ-панели)
+
+### Действия ИИ:
+
+- Следуя плану из Этапа 30, ИИ начал рефакторинг компонентов Angular (`*.component.ts`) "Админ-панели".
+- Добавлены JSDoc-комментарии для публичных методов (`ngOnInit`, `onSubmit`, `onDelete` и т.д.) и свойств для улучшения читаемости кода.
+- Удалены устаревшие "мусорные" комментарии (`// TODO: ...`) из `admin-legal-act-list.component.ts`.
+
+### Предложенные изменения/артефакты:
+
+- Файл (Рефакторинг): `EcologyLK.Client/src/app/admin-client-list/admin-client-list.component.ts` (Добавлен JSDoc)
+- Файл (Рефакторинг): `EcologyLK.Client/src/app/admin-legal-act-list/admin-legal-act-list.component.ts` (Добавлен JSDoc, удален TODO)
+- Файл (Рефакторинг): `EcologyLK.Client/src/app/admin-rule-list/admin-rule-list.component.ts` (Добавлен JSDoc)
+- Файл (Рефакторинг): `EcologyLK.Client/src/app/admin-user-list/admin-user-list.component.ts` (Добавлен JSDoc)
+
+### Предложение ИИ для следующего этапа:
+
+- Компоненты "Админ-панели" очищены и документированы.
+- Следующим логичным шагом будет рефакторинг **оставшихся ключевых компонентов Frontend**: `client-site-form.component.ts` (Анкета), `artifact-manager.component.ts` (Хранилище), `requirement-map.component.ts` (Карта требований) и `login.component.ts`.

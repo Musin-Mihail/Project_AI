@@ -19,7 +19,9 @@ export class AdminClientListComponent implements OnInit {
   isLoading = signal(true);
   error = signal<string | null>(null);
 
-  // Форма для создания нового клиента
+  /**
+   * Форма для создания нового клиента
+   */
   clientForm = this.fb.group({
     name: ['', Validators.required],
     inn: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(12)]],
@@ -30,6 +32,9 @@ export class AdminClientListComponent implements OnInit {
     this.loadClients();
   }
 
+  /**
+   * Загружает список клиентов с сервера
+   */
   loadClients() {
     this.isLoading.set(true);
     this.adminService.getClients().subscribe({
@@ -44,6 +49,9 @@ export class AdminClientListComponent implements OnInit {
     });
   }
 
+  /**
+   * Вызывается при отправке формы создания клиента
+   */
   onSubmit() {
     if (this.clientForm.invalid) {
       this.error.set('Форма заполнена некорректно.');

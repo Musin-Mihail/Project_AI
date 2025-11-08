@@ -21,7 +21,9 @@ export class AdminUserListComponent implements OnInit {
   isLoading = signal(true);
   error = signal<string | null>(null);
 
-  // Форма для создания нового пользователя
+  /**
+   * Форма для создания нового пользователя
+   */
   userForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['Password123!', [Validators.required, Validators.minLength(6)]],
@@ -34,6 +36,9 @@ export class AdminUserListComponent implements OnInit {
     this.loadData();
   }
 
+  /**
+   * Загружает данные (Пользователей и Клиентов) с сервера
+   */
   loadData() {
     this.isLoading.set(true);
     // Загружаем одновременно и пользователей, и клиентов
@@ -52,6 +57,9 @@ export class AdminUserListComponent implements OnInit {
       });
   }
 
+  /**
+   * Вызывается при отправке формы создания пользователя
+   */
   onSubmit() {
     if (this.userForm.invalid) {
       this.error.set('Форма заполнена некорректно.');
@@ -78,7 +86,7 @@ export class AdminUserListComponent implements OnInit {
         });
       },
       error: (err) => {
-        // err.error.message - это сообщение от .NET (напр. "Пользователь уже существует")
+        // err.error?.message - это сообщение от .NET (напр. "Пользователь уже существует")
         const errorMsg =
           err.error?.message || err.message || 'Неизвестная ошибка при создании пользователя';
         this.error.set(errorMsg);

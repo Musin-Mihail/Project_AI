@@ -20,26 +20,33 @@ export class AdminRuleListComponent implements OnInit {
   isLoading = signal(true);
   error = signal<string | null>(null);
 
-  // ID правила, которое сейчас редактируется (null = создание нового)
+  /**
+   * ID правила, которое сейчас редактируется (null = создание нового)
+   */
   editingRuleId = signal<number | null>(null);
 
-  // Опции для выпадающих списков (select)
-  // WaterUseType.Other не используется в логике, поэтому исключаем
+  /**
+   * Опции для выпадающего списка (select) WaterUseType
+   */
   waterUseOptions = Object.keys(WaterUseType)
-    .filter((v) => isNaN(Number(v)) && v !== 'Other')
+    .filter((v) => isNaN(Number(v)) && v !== 'Other') // WaterUseType.Other не используется
     .map((key) => ({
       key: key,
       value: WaterUseType[key as keyof typeof WaterUseType],
     }));
 
-  // Для nullable booleans
+  /**
+   * Опции для выпадающего списка (select) nullable booleans
+   */
   boolTriggerOptions = [
     { text: 'Не применять', value: 'null' },
     { text: 'Требуется (True)', value: 'true' },
     { text: 'Не требуется (False)', value: 'false' },
   ];
 
-  // Форма для создания/редактирования
+  /**
+   * Форма для создания/редактирования правила
+   */
   ruleForm = this.fb.group({
     description: ['', [Validators.required, Validators.maxLength(500)]],
     // --- Триггеры ---
@@ -56,7 +63,9 @@ export class AdminRuleListComponent implements OnInit {
     isActive: [true, Validators.required],
   });
 
-  // Вычисляемый сигнал для заголовка формы
+  /**
+   * Вычисляемый сигнал для заголовка формы
+   */
   formTitle = computed(() =>
     this.editingRuleId()
       ? `Редактирование правила ID: ${this.editingRuleId()}`
@@ -67,6 +76,9 @@ export class AdminRuleListComponent implements OnInit {
     this.loadRules();
   }
 
+  /**
+   * Загружает список правил генерации с сервера
+   */
   loadRules() {
     this.isLoading.set(true);
     this.ruleService.getRules().subscribe({
@@ -117,6 +129,7 @@ export class AdminRuleListComponent implements OnInit {
 
   /**
    * Заполняет форму для редактирования
+   * @param rule DTO правила для редактирования
    */
   onEdit(rule: RequirementRuleDto) {
     this.editingRuleId.set(rule.id);
@@ -208,6 +221,7 @@ export class AdminRuleListComponent implements OnInit {
 
   /**
    * Удаление правила
+   * @param rule DTO правила для удаления
    */
   onDelete(rule: RequirementRuleDto) {
     if (!confirm(`Вы уверены, что хотите удалить правило ID: ${rule.id} (${rule.description})?`)) {
