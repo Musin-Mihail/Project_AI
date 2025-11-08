@@ -98,9 +98,11 @@ export interface CalendarEventDto {
   id: number;
   title: string;
   startDate: Date;
+  endDate?: Date; // ИЗМЕНЕНО
   eventType: string;
   relatedSiteId?: number;
   relatedSiteName?: string;
+  color?: string; // ИЗМЕНЕНО
 }
 
 /**
@@ -126,7 +128,7 @@ export interface RegisterUserDto {
   email: string;
   password?: string; // Опционально, т.к. мы его не храним
   fullName: string;
-  clientId: number;
+  clientId?: number; // ИЗМЕНЕНО
 }
 
 /**

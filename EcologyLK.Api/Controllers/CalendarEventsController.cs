@@ -35,7 +35,14 @@ public class CalendarEventsController : ControllerBase
     {
         var userClientId = User.GetClientId();
         var isAdmin = User.IsAdmin();
-        var query = _context.EcologicalRequirements.Where(r => r.Deadline.HasValue);
+
+        // --- ИСПРАВЛЕНА ЛОГИКА RLS ---
+        // 1. Базовый запрос
+        var query = _context
+            .EcologicalRequirements
+            // Включаем ClientSite, чтобы маппер мог получить RelatedSiteName
+            .Include(r => r.ClientSite)
+            .Where(r => r.Deadline.HasValue); // Выбираем только те, у которых есть срок
 
         if (!isAdmin)
         {
@@ -45,25 +52,23 @@ public class CalendarEventsController : ControllerBase
                 return Ok(new List<CalendarEventDto>());
             }
 
-            // Получаем ID площадок, к которым у клиента есть доступ
+            // 2. Получаем ID площадок, к которым у клиента есть доступ
             var clientSiteIds = await _context
                 .ClientSites.Where(s => s.ClientId == userClientId.Value)
                 .Select(s => s.Id)
                 .ToListAsync();
 
-            // Фильтруем требования по этим площадкам
+            // 3. Фильтруем требования по этим площадкам (RLS)
             query = query.Where(r => clientSiteIds.Contains(r.ClientSiteId));
         }
-        // Админ видит все (фильтр не применяется)
+        // Админ видит все (фильтр RLS не применяется)
 
-        var events = await _context
-            .EcologicalRequirements
-            // Выбираем только те, у которых есть срок выполнения
-            .Where(r => r.Deadline.HasValue)
+        // 4. Выполняем отфильтрованный запрос
+        var events = await query
             .OrderBy(r => r.Deadline)
-            .Include(r => r.ClientSite) // Включаем данные площадки
             .ProjectTo<CalendarEventDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
+        // --- КОНЕЦ ИСПРАВЛЕНИЯ ---
 
         return Ok(events);
     }

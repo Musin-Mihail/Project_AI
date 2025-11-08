@@ -15,30 +15,7 @@
 </div>
 }
 
-<!-- 3. Список событий (MVP) -->
-<div class="table-container">
-  <table class="event-table">
-    <thead>
-      <tr>
-        <th>Дата</th>
-        <th>Событие (Требование)</th>
-        <th>Площадка</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (event of events(); track event.id) {
-      <tr>
-        <td>
-          <strong>{{ event.startDate | date: 'dd.MM.yyyy' }}</strong>
-        </td>
-        <td>{{ event.title }}</td>
-        <td>{{ event.relatedSiteName ?? 'N/A' }}</td>
-      </tr>
-      } @empty {
-      <tr>
-        <td colspan="3">События с установленными сроками отсутствуют.</td>
-      </tr>
-      }
-    </tbody>
-  </table>
+<!-- 3. FullCalendar (вместо таблицы) -->
+<div class="calendar-container">
+  <full-calendar [options]="calendarOptions()" />
 </div>

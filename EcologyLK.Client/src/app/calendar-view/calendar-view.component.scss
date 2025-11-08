@@ -1,34 +1,4 @@
-.table-container {
-  overflow-x: auto;
-  margin-top: 1rem;
-}
-
-.event-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9rem;
-
-  th,
-  td {
-    border: 1px solid #ddd;
-    padding: 0.75rem;
-    text-align: left;
-    vertical-align: top;
-  }
-
-  th {
-    background-color: #f4f4f4;
-    font-weight: bold;
-  }
-
-  tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-
-  tr:hover {
-    background-color: #f1f1f1;
-  }
-}
+/* (1) Удалены старые стили .table-container и .event-table */
 
 .error-message {
   color: #d8000c;
@@ -36,4 +6,28 @@
   border: 1px solid #d8000c;
   padding: 1rem;
   border-radius: 8px;
+}
+
+/* (2) Добавлены стили для FullCalendar */
+.calendar-container {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+
+  /* Переопределяем цвета кнопок FullCalendar, чтобы они
+     соответствовали стилю нашего приложения */
+  --fc-button-bg-color: #007bff;
+  --fc-button-border-color: #007bff;
+  --fc-button-hover-bg-color: #0056b3;
+  --fc-button-hover-border-color: #0056b3;
+  --fc-button-active-bg-color: #0056b3;
+  --fc-button-active-border-color: #0056b3;
+
+  /* Улучшаем читаемость событий */
+  .fc-event-main {
+    font-size: 0.85rem;
+    padding: 2px 4px;
+  }
 }

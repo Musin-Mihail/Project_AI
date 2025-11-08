@@ -533,3 +533,32 @@
 - Проект MVP теперь полностью функционально завершен, включая "Справочник НПА".
 - Следующим логичным шагом может быть улучшение UX/UI, как предлагалось ранее: **замена MVP-таблицы "Календаря"** на полноценный графический календарь (с использованием `fullcalendar` или аналога).
 - Альтернативно, можно начать реализацию более сложной части "Справочников" из ТЗ (п.7): **"Правила построения требований"**. Это потребует рефакторинга `RequirementGenerationService` для использования правил из БД, а не из C#-кода.
+
+### Этап 19: Улучшение "Календаря событий" (FullCalendar) и исправление RLS
+
+### Действия ИИ:
+
+- Проанализировав ТЗ и лог (Этап 18), ИИ определил, что следующим логичным шагом является улучшение UX/UI "Календаря событий", который был реализован как простая таблица (Этап 7).
+- **Действие 1 (Backend - RLS Fix):** ИИ обнаружил и исправил критическую ошибку в `CalendarEventsController.cs`, где фильтрация Row-Level Security (RLS) применялась некорректно. Теперь запрос сначала фильтруется по `ClientId` пользователя и только потом выполняется.
+- **Действие 2 (Backend - DTO):** ИИ расширил `CalendarEventDto` (добавил `EndDate`, `Color`) и обновил `MappingProfile` для окрашивания событий в календаре в зависимости от их статуса (просрочено, выполнено, в работе).
+- **Действие 3 (Frontend - Пакеты):** ИИ добавил в `package.json` и `angular.json` зависимости для `FullCalendar` (`@fullcalendar/angular`, `@fullcalendar/daygrid` и т.д.).
+- **Действие 4 (Frontend - UI):** ИИ полностью переработал `calendar-view.component.ts/.html/.scss`, заменив `<table>` на компонент `<full-calendar>`. Добавлена русская локализация (`ruLocale`) и логика для преобразования `CalendarEventDto[]` в `EventInput[]`, понятный `FullCalendar`.
+
+### Предложенные изменения/артефакты:
+
+- Файл (Изменен): `EcologyLK.Api/DTOs/CalendarEventDto.cs` (Добавлены `EndDate`, `Color`)
+- Файл (Изменен): `EcologyLK.Api/Utils/MappingProfile.cs` (Добавлен маппинг для `Color`)
+- Файл (Изменен): `EcologyLK.Api/Controllers/CalendarEventsController.cs` (Исправлена критическая ошибка RLS)
+- Файл (Изменен): `EcologyLK.Client/package.json` (Добавлены пакеты `@fullcalendar/*`)
+- Файл (Изменен): `EcologyLK.Client/src/app/models.ts` (Обновлен `CalendarEventDto`)
+- Файл (Изменен): `EcologyLK.Client/src/app/calendar-view/calendar-view.component.ts` (Интеграция `FullCalendarModule` и `ruLocale`)
+- Файл (Изменен): `EcologyLK.Client/src/app/calendar-view/calendar-view.component.html` (Заменена `<table>` на `<full-calendar>`)
+- Файл (Изменен): `EcologyLK.Client/src/app/calendar-view/calendar-view.component.scss` (Обновлены стили)
+
+### Предложение ИИ для следующего этапа:
+
+- Проект MVP теперь функционально завершен и имеет качественный UX для всех основных блоков.
+- Последним шагом (согласно ТЗ, п.7 "Админ-панель") является реализация управления **"Правилами построения требований"**. Это сложный рефакторинг, который потребует:
+  1. Создания моделей "Правил" в БД (API).
+  2. Создания UI для Админ-панели для управления этими правилами (Frontend).
+  3. Рефакторинга `RequirementGenerationService` (API), чтобы он перестал использовать `if/switch` (hardcode) и вместо этого читал правила из БД для генерации `EcologicalRequirement`.

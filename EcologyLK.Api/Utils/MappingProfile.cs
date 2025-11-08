@@ -28,11 +28,26 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
             .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.Deadline))
+            .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => (DateTime?)null)) // По умолчанию длительности нет
             .ForMember(dest => dest.EventType, opt => opt.MapFrom(src => "Requirement"))
             .ForMember(dest => dest.RelatedSiteId, opt => opt.MapFrom(src => src.ClientSiteId))
             .ForMember(
                 dest => dest.RelatedSiteName,
                 opt => opt.MapFrom(src => src.ClientSite != null ? src.ClientSite.Name : null)
+            )
+            // ДОБАВЛЕНО: Окрашиваем события в календаре
+            .ForMember(
+                dest => dest.Color,
+                opt =>
+                    opt.MapFrom(src =>
+                        src.Status == RequirementStatus.Completed
+                            ? "#28a745" // Зеленый (Выполнено)
+                            : (
+                                src.Deadline.HasValue && src.Deadline.Value < DateTime.UtcNow
+                                    ? "#dc3545" // Красный (Просрочено)
+                                    : "#007bff" // Синий (В работе / Не начато)
+                            )
+                    )
             );
 
         // Модель Фин. Документа -> DTO для отображения
