@@ -13,20 +13,26 @@ import { ClientSiteDto, CreateClientSiteDto } from './models';
 export class ClientSiteService {
   private http = inject(HttpClient);
 
-  // URL нашего .NET API (из D:\Repositories!\EcologyLK.Api\Properties\launchSettings.json)
+  // URL .NET API
   private apiUrl = 'https://localhost:7166/api/ClientSites';
 
   /**
-   * POST: Создает новую площадку ("Анкета")
+   * POST: api/ClientSites
+   * Создает новую площадку ("Анкета")
    * и возвращает созданную площадку с картой требований.
+   * @param siteData DTO "Анкеты"
+   * @returns Observable с DTO созданной площадки
    */
   createClientSite(siteData: CreateClientSiteDto): Observable<ClientSiteDto> {
     return this.http.post<ClientSiteDto>(this.apiUrl, siteData);
   }
 
   /**
-   * GET: Получает площадку клиента по ID,
+   * GET: api/ClientSites/{id}
+   * Получает площадку клиента по ID,
    * включая "Карту требований".
+   * @param id ID площадки
+   * @returns Observable с DTO площадки
    */
   getClientSite(id: number): Observable<ClientSiteDto> {
     return this.http.get<ClientSiteDto>(`${this.apiUrl}/${id}`);

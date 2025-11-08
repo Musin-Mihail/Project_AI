@@ -11,7 +11,7 @@ const AUTH_SESSION_KEY = 'ecology_lk_session';
 
 /**
  * Сервис для управления Аутентификацией
- * (Вход, Регистрация, Хранение токена)
+ * (Вход, Регистрация, Хранение токена и состояния пользователя)
  */
 @Injectable({
   providedIn: 'root',
@@ -20,10 +20,13 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  // URL нашего .NET Auth API
+  // URL .NET Auth API
   private apiUrl = 'https://localhost:7166/api/Auth';
 
-  // Signal для хранения текущего пользователя
+  /**
+   * Signal, хранящий данные текущего пользователя (или null).
+   * Является источником правды о состоянии аутентификации в приложении.
+   */
   currentUser = signal<AuthResponseDto | null>(null);
 
   constructor() {
@@ -32,14 +35,16 @@ export class AuthService {
   }
 
   /**
-   * Проверяет, залогинен ли пользователь
+   * Проверяет, залогинен ли пользователь (currentUser не null).
+   * @returns true, если пользователь аутентифицирован
    */
   isLoggedIn(): boolean {
     return !!this.currentUser();
   }
 
   /**
-   * Возвращает текущий JWT
+   * Возвращает текущий JWT (Bearer token).
+   * @returns Строка с JWT или null
    */
   getToken(): string | null {
     return this.currentUser()?.token ?? null;
@@ -48,19 +53,22 @@ export class AuthService {
   /**
    * Проверяет, есть ли у пользователя указанная роль
    * @param role Имя роли (напр. 'Admin')
+   * @returns true, если пользователь имеет данную роль
    */
   hasRole(role: string): boolean {
     const user = this.currentUser();
     if (!user || !user.roles) {
       return false;
     }
-    // Проверяем наличие роли (без учета регистра на всякий случай)
+    // Проверяем наличие роли (без учета регистра)
     return user.roles.some((r) => r.toLowerCase() === role.toLowerCase());
   }
 
   /**
    * POST: api/Auth/Login
-   * Выполняет вход
+   * Выполняет вход пользователя.
+   * @param dto Данные для входа (Email, Пароль)
+   * @returns Observable с полным DTO ответа (AuthResponseDto)
    */
   login(dto: LoginUserDto): Observable<AuthResponseDto> {
     return this.http.post<AuthResponseDto>(`${this.apiUrl}/Login`, dto).pipe(
@@ -73,14 +81,17 @@ export class AuthService {
 
   /**
    * POST: api/Auth/Register
-   * (Пока не используется в UI, но доступен)
+   * Регистрирует нового пользователя.
+   * (В MVP не используется в UI, но доступен для Админ-панели)
+   * @param dto Данные для регистрации
+   * @returns Observable<any>
    */
   register(dto: RegisterUserDto): Observable<any> {
     return this.http.post(`${this.apiUrl}/Register`, dto);
   }
 
   /**
-   * Выполняет выход
+   * Выполняет выход (очищает сессию и перенаправляет на /login)
    */
   logout() {
     this.clearSession();
@@ -89,12 +100,15 @@ export class AuthService {
 
   // --- Приватные методы управления сессией ---
 
+  /**
+   * Загружает сессию из localStorage при инициализации сервиса.
+   */
   private loadSession() {
     try {
       const storedSession = localStorage.getItem(AUTH_SESSION_KEY);
       if (storedSession) {
         const session: AuthResponseDto = JSON.parse(storedSession);
-        // TODO: Проверить срок жизни токена
+        // TODO (в будущем): Проверить срок жизни токена
         this.currentUser.set(session);
       }
     } catch (e) {
@@ -103,6 +117,10 @@ export class AuthService {
     }
   }
 
+  /**
+   * Сохраняет данные пользователя в localStorage и обновляет signal.
+   * @param response DTO ответа от API
+   */
   private saveSession(response: AuthResponseDto) {
     try {
       localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(response));
@@ -112,6 +130,9 @@ export class AuthService {
     }
   }
 
+  /**
+   * Очищает сессию из localStorage и сбрасывает signal.
+   */
   private clearSession() {
     try {
       localStorage.removeItem(AUTH_SESSION_KEY);

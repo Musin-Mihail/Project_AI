@@ -13,11 +13,14 @@ import { ArtifactDto } from './models';
 export class ArtifactService {
   private http = inject(HttpClient);
 
-  // URL нашего .NET API (из D:\Repositories!\EcologyLK.Api\Properties\launchSettings.json)
+  // URL .NET API
   private apiUrl = 'https://localhost:7166/api/Artifacts';
 
   /**
-   * GET: Получает список артефактов (метаданные) для указанной площадки.
+   * GET: api/Artifacts
+   * Получает список артефактов (метаданные) для указанной площадки.
+   * @param siteId ID площадки
+   * @returns Observable со списком DTO Артефактов
    */
   getArtifactsForSite(siteId: number): Observable<ArtifactDto[]> {
     const params = new HttpParams().set('siteId', siteId.toString());
@@ -25,7 +28,12 @@ export class ArtifactService {
   }
 
   /**
-   * POST: Загружает новый файл (артефакт) для площадки.
+   * POST: api/Artifacts/Upload
+   * Загружает новый файл (артефакт) для площадки.
+   * @param siteId ID площадки
+   * @param requirementId (Опционально) ID требования
+   * @param file Загружаемый файл
+   * @returns Observable с DTO созданного Артефакта
    */
   uploadArtifact(
     siteId: number,
@@ -46,15 +54,21 @@ export class ArtifactService {
   }
 
   /**
-   * DELETE: Удаляет артефакт (запись из БД и файл из хранилища).
+   * DELETE: api/Artifacts/{id}
+   * Удаляет артефакт (запись из БД и файл из хранилища).
+   * @param id ID артефакта
+   * @returns Observable<void>
    */
   deleteArtifact(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
   /**
-   * GET: Скачивает физический файл артефакта по его ID.
+   * GET: api/Artifacts/Download/{id}
+   * Скачивает физический файл артефакта по его ID.
    * Обрабатывает ответ как 'blob' и инициирует скачивание в браузере.
+   * @param id ID артефакта
+   * @param fileName Имя файла, которое будет у пользователя (OriginalFileName)
    */
   downloadArtifact(id: number, fileName: string): void {
     this.http.get(`${this.apiUrl}/Download/${id}`, { responseType: 'blob' }).subscribe({
@@ -72,7 +86,7 @@ export class ArtifactService {
       },
       error: (err) => {
         console.error('Ошибка при скачивании файла:', err);
-        // TODO: Показать ошибку пользователю
+        // Ошибка будет обработана глобально или в компоненте
       },
     });
   }
