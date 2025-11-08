@@ -202,3 +202,15 @@ export interface UpdateUserDto {
   fullName: string;
   clientId?: number;
 }
+
+// --- DTO ДЛЯ РЕДАКТИРОВАНИЯ ТРЕБОВАНИЙ (Новое) ---
+
+/**
+ * DTO для ручного обновления Экологического Требования
+ * (Зеркало EcologyLK.Api/DTOs/UpdateRequirementDto.cs)
+ */
+export interface UpdateRequirementDto {
+  status: RequirementStatus;
+  deadline?: Date;
+  responsiblePerson?: string;
+}

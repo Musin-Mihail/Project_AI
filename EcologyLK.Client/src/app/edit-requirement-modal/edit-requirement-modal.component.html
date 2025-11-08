@@ -1,0 +1,39 @@
+<!--
+  Модальное окно для редактирования требования.
+  Показывается/скрывается родительским компонентом (requirement-map)
+-->
+<div class="modal-backdrop">
+  <div class="modal-content">
+    <h3>{{ title() }}</h3>
+
+    <form [formGroup]="editForm" (ngSubmit)="onSave()">
+      <div class="form-field">
+        <label for="status">Статус</label>
+        <select id="status" formControlName="status">
+          @for(opt of statusOptions; track opt.key) {
+          <option [value]="opt.value">{{ opt.key }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="deadline">Срок выполнения</label>
+        <input id="deadline" type="date" formControlName="deadline" />
+      </div>
+
+      <div class="form-field">
+        <label for="responsiblePerson">Ответственный</label>
+        <input id="responsiblePerson" type="text" formControlName="responsiblePerson" placeholder="ФИО" />
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" (click)="onClose()">
+          Отмена
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="editForm.invalid">
+          Сохранить
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
