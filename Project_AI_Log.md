@@ -619,3 +619,24 @@
   1. Загружает `List<RequirementRule>` из `AppDbContext`.
   2. Циклически применяет каждое `rule` к параметрам "Анкеты" (`NvosCategory`, `WaterUseType` и т.д.).
   3. Генерирует `EcologicalRequirement` на основе `rule.GeneratedTitle` и `rule.GeneratedBasis`.
+
+### Этап 22: Рефакторинг RequirementGenerationService (переход на "Движок правил")
+
+### Действия ИИ:
+
+- Проанализировав ТЗ (п.7) и лог (Этапы 20-21), ИИ определил, что "Справочник Правил" был создан (API + UI + Seeding), но `RequirementGenerationService` все еще использовал старую C#-логику (hardcode `if/switch`).
+- **Действие 1 (Рефакторинг):** ИИ полностью переписал `EcologyLK.Api/Services/RequirementGenerationService.cs`.
+- **Действие 2 (Внедрение):** Сервис теперь внедряет `AppDbContext` для доступа к данным.
+- **Действие 3 (Логика):** Вся C#-логика `if/switch` и `AddReq` была **удалена**. Новый метод `GenerateRequirements` теперь:
+  1. Загружает `List<RequirementRule>` из `AppDbContext`.
+  2. Динамически определяет, какие правила применимы к "Анкете", сверяя `NvosCategory`, `WaterUseType` и `HasByproducts` с триггерами в БД.
+  3. Генерирует `EcologicalRequirement` на основе полей `GeneratedTitle`, `GeneratedBasis` и `GeneratedPenaltyRisk` из совпавших правил.
+
+### Предложенные изменения/артефакты:
+
+- Файл (Изменен): `EcologyLK.Api/Services/RequirementGenerationService.cs` (Полностью переписана логика для использования `AppDbContext` и `RequirementRules` вместо `if/switch`).
+
+### Предложение ИИ для следующего этапа:
+
+- **Проект MVP завершен.** "Движок правил" теперь полностью управляется данными через "Админ-панель", как того требовало ТЗ.
+- Будущие этапы могут включать реализацию оставшихся (не-MVP) блоков ТЗ (п.1): "Лента изменений в законодательстве", "Снижение затрат" и "Шаблоны".
