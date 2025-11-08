@@ -16,11 +16,15 @@ namespace EcologyLK.Api.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
+[Produces("application/json")]
 public class EcologicalRequirementsController : ControllerBase
 {
     private readonly AppDbContext _context;
     private readonly IMapper _mapper;
 
+    /// <summary>
+    /// Конструктор EcologicalRequirementsController
+    /// </summary>
     public EcologicalRequirementsController(AppDbContext context, IMapper mapper)
     {
         _context = context;
@@ -32,8 +36,20 @@ public class EcologicalRequirementsController : ControllerBase
     /// Обновляет существующее требование (Статус, Срок, Ответственный).
     /// Доступно только Администраторам.
     /// </summary>
+    /// <param name="id">ID требования для обновления</param>
+    /// <param name="updateDto">DTO с данными для обновления</param>
+    /// <returns>204 No Content</returns>
+    /// <response code="204">Требование успешно обновлено</response>
+    /// <response code="400">Ошибка валидации (не используется, но зарезервировано)</response>
+    /// <response code="401">Пользователь не аутентифицирован</response>
+    /// <response code="403">Пользователь не является Администратором</response>
+    /// <response code="404">Требование или связанная площадка не найдены</response>
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")] // Только Админ может менять требования
+    [ProducesResponseType(204)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> UpdateRequirement(
         int id,
         [FromBody] UpdateRequirementDto updateDto
@@ -46,8 +62,7 @@ public class EcologicalRequirementsController : ControllerBase
             return NotFound("Требование не найдено.");
         }
 
-        // RLS-проверка (хотя [Authorize(Roles="Admin")] уже это покрывает,
-        // но это хорошая практика на случай расширения ролей)
+        // RLS-проверка (на случай, если сюда получат доступ не-Админы)
         var site = await _context.ClientSites.FindAsync(requirement.ClientSiteId);
         if (site == null)
         {
@@ -56,8 +71,6 @@ public class EcologicalRequirementsController : ControllerBase
 
         if (!User.IsAdmin())
         {
-            // Эта проверка сработает, если убрать [Authorize(Roles="Admin")]
-            // и добавить роль "Manager"
             var userClientId = User.GetClientId();
             if (site.ClientId != userClientId)
             {

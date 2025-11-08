@@ -15,11 +15,15 @@ namespace EcologyLK.Api.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
+[Produces("application/json")]
 public class FinancialDocumentsController : ControllerBase
 {
     private readonly AppDbContext _context;
     private readonly IMapper _mapper;
 
+    /// <summary>
+    /// Конструктор FinancialDocumentsController
+    /// </summary>
     public FinancialDocumentsController(AppDbContext context, IMapper mapper)
     {
         _context = context;
@@ -27,8 +31,8 @@ public class FinancialDocumentsController : ControllerBase
     }
 
     /// <summary>
-    /// Проверка, имеет ли пользователь (Клиент или Админ)
-    /// доступ к указанной площадке
+    /// (Приватный) Проверка, имеет ли пользователь (Клиент или Админ)
+    /// доступ к указанной площадке (RLS).
     /// </summary>
     private async Task<bool> CheckSiteAccessAsync(int siteId)
     {
@@ -47,18 +51,28 @@ public class FinancialDocumentsController : ControllerBase
     /// GET: api/FinancialDocuments?siteId=5
     /// Получает список финансовых документов для указанной площадки.
     /// </summary>
+    /// <param name="siteId">ID площадки, для которой запрашиваются документы</param>
+    /// <returns>Список DTO Финансовых документов</returns>
+    /// <response code="200">Возвращает список документов</response>
+    /// <response code="400">Не указан siteId</response>
+    /// <response code="401">Пользователь не аутентифицирован</response>
+    /// <response code="403">Доступ к данной площадке запрещен (RLS)</response>
     [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<FinancialDocumentDto>), 200)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(403)]
     public async Task<ActionResult<IEnumerable<FinancialDocumentDto>>> GetDocumentsForSite(
         [FromQuery] int siteId
     )
     {
-        if (!await CheckSiteAccessAsync(siteId))
-        {
-            return Forbid("Доступ к данной площадке запрещен.");
-        }
         if (siteId <= 0)
         {
             return BadRequest("Необходимо указать siteId.");
+        }
+        if (!await CheckSiteAccessAsync(siteId))
+        {
+            return Forbid("Доступ к данной площадке запрещен.");
         }
 
         var documents = await _context
@@ -69,8 +83,4 @@ public class FinancialDocumentsController : ControllerBase
 
         return Ok(documents);
     }
-
-    // Для MVP реализован только GET.
-    // В будущем здесь будут методы [HttpPost] для создания, [HttpPut] для смены статуса
-    // и, возможно, привязка к IArtifactStorageService для загрузки сканов.
 }

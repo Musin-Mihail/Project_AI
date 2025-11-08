@@ -731,3 +731,21 @@
 
 - Первая группа контроллеров очищена и документирована.
 - Следующим логичным шагом будет продолжение рефакторинга оставшихся контроллеров: `CalendarEventsController`, `EcologicalRequirementsController`, `FinancialDocumentsController`, `LegalActsController` и `RequirementRulesController` для приведения их к тому же стандарту качества.
+
+### Этап 27: Рефакторинг API-контроллеров (Часть 2, Завершение)
+
+### Действия ИИ:
+- Следуя плану из Этапа 26, ИИ завершил рефакторинг API-контроллеров.
+- Для оставшихся 5 контроллеров (`CalendarEvents`, `EcologicalRequirements`, `FinancialDocuments`, `LegalActs`, `RequirementRules`) добавлена полная XML-документация, включая `<param>`, `<returns>` и коды ответов `<response>`.
+- Удалены "мусорные" комментарии (например, `// Для MVP реализован только GET...` из `FinancialDocumentsController`).
+
+### Предложенные изменения/артефакты:
+- Файл (Рефакторинг): `EcologyLK.Api/Controllers/CalendarEventsController.cs` (Добавлена полная XML-документация)
+- Файл (Рефакторинг): `EcologyLK.Api/Controllers/EcologicalRequirementsController.cs` (Добавлена полная XML-документация)
+- Файл (Рефакторинг): `EcologyLK.Api/Controllers/FinancialDocumentsController.cs` (Добавлена полная XML-документация, удален мусор)
+- Файл (Рефакторинг): `EcologyLK.Api/Controllers/LegalActsController.cs` (Добавлена полная XML-документация)
+- Файл (Рефакторинг): `EcologyLK.Api/Controllers/RequirementRulesController.cs` (Добавлена полная XML-документация)
+
+### Предложение ИИ для следующего этапа:
+- Весь слой API-контроллеров (`Controllers`) теперь полностью документирован.
+- Следующим шагом будет рефакторинг вспомогательных классов: `Utils` (`ClaimsPrincipalExtensions`, `MappingProfile`), `Data` (`DataSeeder`) и `Program.cs` для добавления финальной документации и очистки.

@@ -15,11 +15,15 @@ namespace EcologyLK.Api.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
+[Produces("application/json")]
 public class CalendarEventsController : ControllerBase
 {
     private readonly AppDbContext _context;
     private readonly IMapper _mapper;
 
+    /// <summary>
+    /// Конструктор CalendarEventsController
+    /// </summary>
     public CalendarEventsController(AppDbContext context, IMapper mapper)
     {
         _context = context;
@@ -28,15 +32,20 @@ public class CalendarEventsController : ControllerBase
 
     /// <summary>
     /// GET: api/CalendarEvents
-    /// Получает список всех событий (для MVP - это требования с установленным Deadline)
+    /// Получает список всех событий (для MVP - это требования с установленным Deadline).
+    /// Применяет RLS (Row-Level Security) в зависимости от роли пользователя (Админ/Клиент).
     /// </summary>
+    /// <returns>Список DTO событий календаря</returns>
+    /// <response code="200">Возвращает список событий</response>
+    /// <response code="401">Пользователь не аутентифицирован</response>
     [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<CalendarEventDto>), 200)]
+    [ProducesResponseType(401)]
     public async Task<ActionResult<IEnumerable<CalendarEventDto>>> GetCalendarEvents()
     {
         var userClientId = User.GetClientId();
         var isAdmin = User.IsAdmin();
 
-        // --- ИСПРАВЛЕНА ЛОГИКА RLS ---
         // 1. Базовый запрос
         var query = _context
             .EcologicalRequirements
@@ -68,7 +77,6 @@ public class CalendarEventsController : ControllerBase
             .OrderBy(r => r.Deadline)
             .ProjectTo<CalendarEventDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
-        // --- КОНЕЦ ИСПРАВЛЕНИЯ ---
 
         return Ok(events);
     }

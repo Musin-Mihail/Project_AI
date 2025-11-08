@@ -15,11 +15,15 @@ namespace EcologyLK.Api.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize] // Все методы требуют аутентификации
+[Produces("application/json")]
 public class LegalActsController : ControllerBase
 {
     private readonly AppDbContext _context;
     private readonly IMapper _mapper;
 
+    /// <summary>
+    /// Конструктор LegalActsController
+    /// </summary>
     public LegalActsController(AppDbContext context, IMapper mapper)
     {
         _context = context;
@@ -31,7 +35,12 @@ public class LegalActsController : ControllerBase
     /// Получает список всех НПА.
     /// (Доступно всем аутентифицированным пользователям)
     /// </summary>
+    /// <returns>Список DTO НПА</returns>
+    /// <response code="200">Возвращает список НПА</response>
+    /// <response code="401">Пользователь не аутентифицирован</response>
     [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<LegalActDto>), 200)]
+    [ProducesResponseType(401)]
     public async Task<ActionResult<IEnumerable<LegalActDto>>> GetLegalActs()
     {
         return await _context
@@ -45,8 +54,18 @@ public class LegalActsController : ControllerBase
     /// Создает новый НПА.
     /// (Только для Администраторов)
     /// </summary>
+    /// <param name="createDto">DTO для создания НПА</param>
+    /// <returns>Созданный DTO НПА</returns>
+    /// <response code="201">Возвращает созданный НПА</response>
+    /// <response code="400">Ошибка валидации</response>
+    /// <response code="401">Пользователь не аутентифицирован</response>
+    /// <response code="403">Пользователь не является Администратором</response>
     [HttpPost]
     [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(LegalActDto), 201)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(403)]
     public async Task<ActionResult<LegalActDto>> CreateLegalAct(
         [FromBody] CreateOrUpdateLegalActDto createDto
     )
@@ -66,8 +85,21 @@ public class LegalActsController : ControllerBase
     /// Обновляет существующий НПА.
     /// (Только для Администраторов)
     /// </summary>
+    /// <param name="id">ID НПА для обновления</param>
+    /// <param name="updateDto">DTO с данными для обновления</param>
+    /// <returns>204 No Content</returns>
+    /// <response code="204">НПА успешно обновлен</response>
+    /// <response code="400">Ошибка валидации</response>
+    /// <response code="401">Пользователь не аутентифицирован</response>
+    /// <response code="403">Пользователь не является Администратором</response>
+    /// <response code="404">НПА не найден</response>
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> UpdateLegalAct(
         int id,
         [FromBody] CreateOrUpdateLegalActDto updateDto
@@ -107,8 +139,18 @@ public class LegalActsController : ControllerBase
     /// Удаляет НПА.
     /// (Только для Администраторов)
     /// </summary>
+    /// <param name="id">ID НПА для удаления</param>
+    /// <returns>204 No Content</returns>
+    /// <response code="204">НПА успешно удален</response>
+    /// <response code="401">Пользователь не аутентифицирован</response>
+    /// <response code="403">Пользователь не является Администратором</response>
+    /// <response code="404">НПА не найден</response>
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> DeleteLegalAct(int id)
     {
         var legalAct = await _context.LegalActs.FindAsync(id);
