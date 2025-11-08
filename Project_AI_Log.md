@@ -793,3 +793,24 @@
 
 - Ключевые сервисы очищены.
 - Следующим логичным шагом будет завершение рефакторинга **оставшихся сервисов** (`calendar.service.ts`, `financial-document.service.ts`, `legal-act.service.ts`, `requirement.service.ts`, `requirement-rule.service.ts`), приведение их к тому же стандарту JSDoc и очистка.
+
+### Этап 30: Рефакторинг Frontend (Сервисный слой, Часть 2, Завершение)
+
+### Действия ИИ:
+
+- Следуя плану из Этапа 29, ИИ завершил рефакторинг сервисного слоя Frontend (`EcologyLK.Client/src/app`).
+- Для оставшихся 5 сервисов (`calendar.service.ts`, `financial-document.service.ts`, `legal-act.service.ts`, `requirement.service.ts`, `requirement-rule.service.ts`) была добавлена полная JSDoc-документация для публичных методов.
+- Удалены "мусорные" комментарии (например, `// URL нашего .NET API...`) из этих файлов.
+
+### Предложенные изменения/артефакты:
+
+- Файл (Рефакторинг): `EcologyLK.Client/src/app/calendar.service.ts` (Добавлен JSDoc, код очищен)
+- Файл (Рефакторинг): `EcologyLK.Client/src/app/financial-document.service.ts` (Добавлен JSDoc, код очищен)
+- Файл (Рефакторинг): `EcologyLK.Client/src/app/legal-act.service.ts` (Добавлен JSDoc, код очищен)
+- Файл (Рефакторинг): `EcologyLK.Client/src/app/requirement.service.ts` (Добавлен JSDoc, код очищен)
+- Файл (Рефакторинг): `EcologyLK.Client/src/app/requirement-rule.service.ts` (Добавлен JSDoc, код очищен)
+
+### Предложение ИИ для следующего этапа:
+
+- Весь сервисный слой Frontend (`*.service.ts`) теперь полностью очищен и документирован.
+- Следующим логичным шагом является рефакторинг **компонентов Angular (`*.component.ts`)**. Необходимо провести ревизию `*.component.ts` файлов на предмет "мусорных" комментариев (`// TODO: ...`), добавления JSDoc для `public` методов (например, `onSubmit()`, `onDelete()`) и, при необходимости, упрощения логики. Начать следует с компонентов "Админ-панели".

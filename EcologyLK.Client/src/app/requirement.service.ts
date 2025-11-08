@@ -12,13 +12,15 @@ import { UpdateRequirementDto } from './models';
 })
 export class RequirementService {
   private http = inject(HttpClient);
-
-  // URL нашего .NET API
   private apiUrl = 'https://localhost:7166/api/EcologicalRequirements';
 
   /**
    * PUT: api/EcologicalRequirements/{id}
-   * Обновляет существующее требование.
+   * Обновляет существующее требование (Статус, Срок, Ответственный).
+   * (Admin only)
+   * @param id ID требования для обновления
+   * @param dto DTO с данными для обновления
+   * @returns Observable<void>
    */
   updateRequirement(id: number, dto: UpdateRequirementDto): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/${id}`, dto);

@@ -12,12 +12,13 @@ import { CalendarEventDto } from './models';
 })
 export class CalendarService {
   private http = inject(HttpClient);
-
-  // URL нашего .NET API (из D:\Repositories!\EcologyLK.Api\Properties\launchSettings.json)
   private apiUrl = 'https://localhost:7166/api/CalendarEvents';
 
   /**
-   * GET: Получает список всех событий
+   * GET: api/CalendarEvents
+   * Получает список всех событий (требований с Deadline)
+   * с учетом RLS (Row-Level Security) пользователя.
+   * @returns Observable со списком DTO событий календаря
    */
   getCalendarEvents(): Observable<CalendarEventDto[]> {
     return this.http.get<CalendarEventDto[]>(this.apiUrl);

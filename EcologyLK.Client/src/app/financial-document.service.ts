@@ -12,12 +12,13 @@ import { FinancialDocumentDto } from './models';
 })
 export class FinancialDocumentService {
   private http = inject(HttpClient);
-
-  // URL нашего .NET API
   private apiUrl = 'https://localhost:7166/api/FinancialDocuments';
 
   /**
-   * GET: Получает список фин. документов для указанной площадки.
+   * GET: api/FinancialDocuments?siteId=...
+   * Получает список фин. документов для указанной площадки.
+   * @param siteId ID площадки, для которой запрашиваются документы
+   * @returns Observable со списком DTO Финансовых документов
    */
   getDocumentsForSite(siteId: number): Observable<FinancialDocumentDto[]> {
     const params = new HttpParams().set('siteId', siteId.toString());
