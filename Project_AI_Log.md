@@ -735,11 +735,13 @@
 ### Этап 27: Рефакторинг API-контроллеров (Часть 2, Завершение)
 
 ### Действия ИИ:
+
 - Следуя плану из Этапа 26, ИИ завершил рефакторинг API-контроллеров.
 - Для оставшихся 5 контроллеров (`CalendarEvents`, `EcologicalRequirements`, `FinancialDocuments`, `LegalActs`, `RequirementRules`) добавлена полная XML-документация, включая `<param>`, `<returns>` и коды ответов `<response>`.
 - Удалены "мусорные" комментарии (например, `// Для MVP реализован только GET...` из `FinancialDocumentsController`).
 
 ### Предложенные изменения/артефакты:
+
 - Файл (Рефакторинг): `EcologyLK.Api/Controllers/CalendarEventsController.cs` (Добавлена полная XML-документация)
 - Файл (Рефакторинг): `EcologyLK.Api/Controllers/EcologicalRequirementsController.cs` (Добавлена полная XML-документация)
 - Файл (Рефакторинг): `EcologyLK.Api/Controllers/FinancialDocumentsController.cs` (Добавлена полная XML-документация, удален мусор)
@@ -747,5 +749,26 @@
 - Файл (Рефакторинг): `EcologyLK.Api/Controllers/RequirementRulesController.cs` (Добавлена полная XML-документация)
 
 ### Предложение ИИ для следующего этапа:
+
 - Весь слой API-контроллеров (`Controllers`) теперь полностью документирован.
 - Следующим шагом будет рефакторинг вспомогательных классов: `Utils` (`ClaimsPrincipalExtensions`, `MappingProfile`), `Data` (`DataSeeder`) и `Program.cs` для добавления финальной документации и очистки.
+
+### Этап 28: Рефакторинг (Вспомогательные классы и Program.cs)
+
+### Действия ИИ:
+
+- Проанализировав код, ИИ определил необходимость завершающей очистки вспомогательных классов и `Program.cs`, следуя предложению из Этапа 27.
+- Добавлены полные XML-комментарии (`<param>`, `<returns>`) в `ClaimsPrincipalExtensions.cs` и `DataSeeder.cs` для улучшения документации.
+- Полностью удалены "мусорные" комментарии (`// Добавлено`, `// --- БЛОК ---`, `// (НОВОЕ)`, `// TODO: ...`) из `MappingProfile.cs`, `DataSeeder.cs` и `Program.cs` для приведения кода к финальному виду.
+
+### Предложенные изменения/артефакты:
+
+- Файл (Рефакторинг): `EcologyLK.Api/Utils/ClaimsPrincipalExtensions.cs` (Добавлена полная XML-документация)
+- Файл (Рефакторинг): `EcologyLK.Api/Utils/MappingProfile.cs` (Удалены "мусорные" комментарии)
+- Файл (Рефакторинг): `EcologyLK.Api/Data/DataSeeder.cs` (Добавлена XML-документация, удалены "мусорные" комментарии)
+- Файл (Рефакторинг): `EcologyLK.Api/Program.cs` (Удалены все "мусорные" комментарии)
+
+### Предложение ИИ для следующего этапа:
+
+- Backend API (`EcologyLK.Api`) теперь полностью очищено и документировано.
+- Следующим логичным шагом является перенос рефакторинга на Frontend-приложение (`EcologyLK.Client`). Необходимо провести ревизию сервисов (`*.service.ts`) и компонентов (`*.component.ts`) Angular на предмет "мусорных" комментариев (`// TODO:`) и добавления JSDoc-документации для публичных методов сервисов.

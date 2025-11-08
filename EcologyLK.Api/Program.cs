@@ -1,15 +1,15 @@
-using System.Text; // Добавлено
+using System.Text;
 using EcologyLK.Api.Data;
 using EcologyLK.Api.Models;
 using EcologyLK.Api.Services;
 using EcologyLK.Api.Utils;
-using Microsoft.AspNetCore.Authentication.JwtBearer; // Добавлено
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens; // Добавлено
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
-var config = builder.Configuration; // Добавлено
+var config = builder.Configuration;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
@@ -30,7 +30,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDataba
 
 builder
     .Services.AddIdentityCore<AppUser>(options =>
-    { // Добавлены опции
+    {
         options.SignIn.RequireConfirmedAccount = false;
         options.Password.RequireDigit = false;
         options.Password.RequireLowercase = false;
@@ -41,7 +41,6 @@ builder
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
 
-// --- ДОБАВЛЕН БЛОК JWT АУТЕНТИФИКАЦИИ ---
 builder
     .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -65,11 +64,9 @@ builder
     });
 builder.Services.AddAuthorization();
 
-// --- КОНЕЦ БЛОКА ---
-
 builder.Services.AddScoped<IRequirementGenerationService, RequirementGenerationService>();
 builder.Services.AddSingleton<IArtifactStorageService, FileArtifactStorageService>();
-builder.Services.AddScoped<IAuthTokenService, AuthTokenService>(); // Добавлено
+builder.Services.AddScoped<IAuthTokenService, AuthTokenService>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddControllers();
 
@@ -77,20 +74,14 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// --- ИЗМЕНЕН БЛОК SEEDING ---
-// Выполняем старый сидер (для Клиента)
 DataSeeder.SeedDatabase(app);
 
-// Выполняем новые асинхронные сидеры
 using (var scope = app.Services.CreateScope())
 {
     var serviceProvider = scope.ServiceProvider;
-    // Используем .Wait() для синхронного выполнения при старте
     DataSeeder.SeedRolesAndAdminAsync(serviceProvider).Wait();
-    DataSeeder.SeedRequirementRulesAsync(serviceProvider).Wait(); // <-- ДОБАВЛЕН ВЫЗОВ
+    DataSeeder.SeedRequirementRulesAsync(serviceProvider).Wait();
 }
-
-// --- КОНЕЦ БЛОКА ---
 
 if (app.Environment.IsDevelopment())
 {
@@ -100,12 +91,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors(MyAllowSpecificOrigins);
 
-// --- ДОБАВЛЕНЫ UseAuthentication и UseAuthorization ---
-// Должны быть ДО UseAuthorization
 app.UseAuthentication();
 app.UseAuthorization();
-
-// --- КОНЕЦ БЛОКА ---
 
 app.MapControllers();
 

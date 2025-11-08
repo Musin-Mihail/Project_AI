@@ -1,6 +1,6 @@
 using EcologyLK.Api.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore; // Добавлено
+using Microsoft.EntityFrameworkCore;
 
 namespace EcologyLK.Api.Data;
 
@@ -11,8 +11,10 @@ namespace EcologyLK.Api.Data;
 public static class DataSeeder
 {
     /// <summary>
-    /// Старый метод для сидинга Клиента
+    /// (Устаревший) Метод для сидинга Клиента.
+    /// Вызывается синхронно.
     /// </summary>
+    /// <param name="app">IApplicationBuilder для получения ServiceProvider</param>
     public static void SeedDatabase(IApplicationBuilder app)
     {
         using (var serviceScope = app.ApplicationServices.CreateScope())
@@ -43,8 +45,10 @@ public static class DataSeeder
     }
 
     /// <summary>
-    /// Новый асинхронный метод для инициализации Ролей и Админа
+    /// Асинхронный метод для инициализации Ролей (Admin, Client) и
+    /// создания пользователя-Администратора.
     /// </summary>
+    /// <param name="serviceProvider">IServiceProvider для получения сервисов</param>
     public static async Task SeedRolesAndAdminAsync(IServiceProvider serviceProvider)
     {
         try
@@ -55,7 +59,6 @@ public static class DataSeeder
             string[] roleNames = { "Admin", "Manager", "Client" };
             IdentityResult roleResult;
 
-            // 1. Создаем роли
             foreach (var roleName in roleNames)
             {
                 var roleExist = await roleManager.RoleExistsAsync(roleName);
@@ -66,7 +69,6 @@ public static class DataSeeder
                 }
             }
 
-            // 2. Создаем Admin-пользователя
             var adminEmail = "admin@ecology.lk";
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
@@ -77,14 +79,12 @@ public static class DataSeeder
                     UserName = adminEmail,
                     Email = adminEmail,
                     FullName = "Администратор Системы",
-                    EmailConfirmed = true, // Подтверждаем Email
+                    EmailConfirmed = true,
                 };
 
-                // TODO: Пароль из appsettings
                 var result = await userManager.CreateAsync(newAdminUser, "AdminP@ssw0rd1!");
                 if (result.Succeeded)
                 {
-                    // 3. Присваиваем роль "Admin"
                     await userManager.AddToRoleAsync(newAdminUser, "Admin");
                     Console.WriteLine("DataSeeder: Пользователь 'Admin' успешно создан.");
                 }
@@ -105,9 +105,10 @@ public static class DataSeeder
     }
 
     /// <summary>
-    /// (НОВОЕ) Инициализирует таблицу "Правил генерации"
-    /// на основе hardcode-логики из RequirementGenerationService
+    /// Инициализирует таблицу "Правил генерации" (RequirementRules)
+    /// на основе hardcode-логики (Этап 20).
     /// </summary>
+    /// <param name="serviceProvider">IServiceProvider для получения AppDbContext</param>
     public static async Task SeedRequirementRulesAsync(IServiceProvider serviceProvider)
     {
         try
@@ -116,11 +117,9 @@ public static class DataSeeder
 
             if (await context.RequirementRules.AnyAsync())
             {
-                // Правила уже существуют, выход
                 return;
             }
 
-            // Если таблица пуста, заполняем ее
             var rules = GetHardcodedRules();
             await context.RequirementRules.AddRangeAsync(rules);
             await context.SaveChangesAsync();
@@ -137,16 +136,14 @@ public static class DataSeeder
     }
 
     /// <summary>
-    /// (НОВОЕ) Вспомогательный метод, дублирующий логику
-    /// из RequirementGenerationService.cs
+    /// Вспомогательный метод, содержащий hardcode-логику
+    /// для первоначального заполнения Справочника Правил.
     /// </summary>
+    /// <returns>Список правил для БД</returns>
     private static List<RequirementRule> GetHardcodedRules()
     {
         var rules = new List<RequirementRule>();
 
-        // --- 1. Требования, зависящие от категории (Таблица из "Критерии...") ---
-
-        // Эти требования есть у I, II, III (кроме IV)
         rules.Add(
             new RequirementRule
             {
@@ -186,7 +183,6 @@ public static class DataSeeder
             }
         );
 
-        // Эти требования есть у всех (I, II, III, IV)
         rules.Add(
             new RequirementRule
             {
@@ -295,7 +291,6 @@ public static class DataSeeder
             }
         );
 
-        // Требования для I, II, III
         rules.Add(
             new RequirementRule
             {
@@ -332,7 +327,6 @@ public static class DataSeeder
             }
         );
 
-        // Требования для I, II
         rules.Add(
             new RequirementRule
             {
@@ -356,7 +350,6 @@ public static class DataSeeder
             }
         );
 
-        // Специфичные по категориям
         rules.Add(
             new RequirementRule
             {
@@ -388,7 +381,6 @@ public static class DataSeeder
             }
         );
 
-        // --- 2. Экологические требования (Водопользование) ---
         rules.Add(
             new RequirementRule
             {
@@ -411,7 +403,6 @@ public static class DataSeeder
             }
         );
 
-        // --- 3. Побочный продукт ---
         rules.Add(
             new RequirementRule
             {
@@ -424,12 +415,11 @@ public static class DataSeeder
             }
         );
 
-        // --- 4. Общее для всех (не из таблицы) ---
         rules.Add(
             new RequirementRule
             {
                 Description = "Обучение (Все)",
-                TriggerNvosCategoryI = true, // Хак: чтобы срабатывало для всех
+                TriggerNvosCategoryI = true,
                 TriggerNvosCategoryII = true,
                 TriggerNvosCategoryIII = true,
                 TriggerNvosCategoryIV = true,

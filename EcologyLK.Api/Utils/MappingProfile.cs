@@ -5,37 +5,39 @@ using EcologyLK.Api.Models;
 namespace EcologyLK.Api.Utils;
 
 /// <summary>
-/// Настройка правил маппинга DTO <-> Entity
+/// Настройка правил маппинга (AutoMapper) DTO <-> Entity
 /// </summary>
 public class MappingProfile : Profile
 {
+    /// <summary>
+    /// Конструктор, в котором определяются все правила маппинга.
+    /// </summary>
     public MappingProfile()
     {
-        // "Анкета" DTO -> Модель Площадки
+        // "Анкета" (DTO) -> Модель Площадки (Entity)
         CreateMap<CreateClientSiteDto, ClientSite>();
 
-        // Модель Площадки -> DTO для отображения
+        // Модель Площадки (Entity) -> DTO для отображения
         CreateMap<ClientSite, ClientSiteDto>();
 
-        // Модель Требования -> DTO для отображения
+        // Модель Требования (Entity) -> DTO для отображения
         CreateMap<EcologicalRequirement, EcologicalRequirementDto>();
 
-        // Модель Артефакта -> DTO для отображения
+        // Модель Артефакта (Entity) -> DTO для отображения
         CreateMap<Artifact, ArtifactDto>();
 
-        // Модель Требования -> DTO для Календаря
+        // Модель Требования (Entity) -> DTO для Календаря
         CreateMap<EcologicalRequirement, CalendarEventDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
             .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.Deadline))
-            .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => (DateTime?)null)) // По умолчанию длительности нет
+            .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => (DateTime?)null))
             .ForMember(dest => dest.EventType, opt => opt.MapFrom(src => "Requirement"))
             .ForMember(dest => dest.RelatedSiteId, opt => opt.MapFrom(src => src.ClientSiteId))
             .ForMember(
                 dest => dest.RelatedSiteName,
                 opt => opt.MapFrom(src => src.ClientSite != null ? src.ClientSite.Name : null)
             )
-            // ДОБАВЛЕНО: Окрашиваем события в календаре
             .ForMember(
                 dest => dest.Color,
                 opt =>
@@ -50,18 +52,18 @@ public class MappingProfile : Profile
                     )
             );
 
-        // Модель Фин. Документа -> DTO для отображения
+        // Модель Фин. Документа (Entity) -> DTO для отображения
         CreateMap<FinancialDocument, FinancialDocumentDto>();
 
-        // DTOs/Models для Админ-панели
+        // Маппинги для Админ-панели (Клиенты)
         CreateMap<Client, ClientDto>();
         CreateMap<CreateClientDto, Client>();
 
-        // DTOs/Models для Справочника НПА
+        // Маппинги для Справочника НПА
         CreateMap<LegalAct, LegalActDto>();
         CreateMap<CreateOrUpdateLegalActDto, LegalAct>();
 
-        // DTOs/Models для Справочника Правил (НОВОЕ)
+        // Маппинги для Справочника Правил
         CreateMap<RequirementRule, RequirementRuleDto>();
         CreateMap<CreateOrUpdateRuleDto, RequirementRule>();
     }
