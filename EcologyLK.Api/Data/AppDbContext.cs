@@ -15,7 +15,8 @@ public class AppDbContext : IdentityDbContext<AppUser> // Используем I
     public DbSet<EcologicalRequirement> EcologicalRequirements { get; set; }
     public DbSet<Artifact> Artifacts { get; set; }
     public DbSet<FinancialDocument> FinancialDocuments { get; set; }
-    public DbSet<LegalAct> LegalActs { get; set; } // <-- ДОБАВЛЕНО
+    public DbSet<LegalAct> LegalActs { get; set; }
+    public DbSet<RequirementRule> RequirementRules { get; set; } // <-- ДОБАВЛЕНО
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

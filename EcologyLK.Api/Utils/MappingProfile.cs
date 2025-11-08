@@ -57,8 +57,12 @@ public class MappingProfile : Profile
         CreateMap<Client, ClientDto>();
         CreateMap<CreateClientDto, Client>();
 
-        // DTOs/Models для Справочника НПА (НОВОЕ)
+        // DTOs/Models для Справочника НПА
         CreateMap<LegalAct, LegalActDto>();
         CreateMap<CreateOrUpdateLegalActDto, LegalAct>();
+
+        // DTOs/Models для Справочника Правил (НОВОЕ)
+        CreateMap<RequirementRule, RequirementRuleDto>();
+        CreateMap<CreateOrUpdateRuleDto, RequirementRule>();
     }
 }

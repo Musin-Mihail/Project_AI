@@ -81,12 +81,13 @@ var app = builder.Build();
 // Выполняем старый сидер (для Клиента)
 DataSeeder.SeedDatabase(app);
 
-// Выполняем новый асинхронный сидер (для Ролей и Админа)
+// Выполняем новые асинхронные сидеры
 using (var scope = app.Services.CreateScope())
 {
     var serviceProvider = scope.ServiceProvider;
     // Используем .Wait() для синхронного выполнения при старте
     DataSeeder.SeedRolesAndAdminAsync(serviceProvider).Wait();
+    DataSeeder.SeedRequirementRulesAsync(serviceProvider).Wait(); // <-- ДОБАВЛЕН ВЫЗОВ
 }
 
 // --- КОНЕЦ БЛОКА ---

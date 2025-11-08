@@ -562,3 +562,32 @@
   1. Создания моделей "Правил" в БД (API).
   2. Создания UI для Админ-панели для управления этими правилами (Frontend).
   3. Рефакторинга `RequirementGenerationService` (API), чтобы он перестал использовать `if/switch` (hardcode) и вместо этого читал правила из БД для генерации `EcologicalRequirement`.
+
+### Этап 20: Реализация API "Справочника Правил" (Движок генерации требований)
+
+### Действия ИИ:
+
+- Проанализировав ТЗ (п.7 "Админ-панель", "правила построения требований") и лог (Этап 19), ИИ определил, что последним нереализованным блоком является перевод hardcode-логики (C# `if/switch` в `RequirementGenerationService`) на динамические правила, управляемые из БД.
+- **Действие 1 (Backend - Модели):** ИИ создал модель `RequirementRule.cs` (и DTO `RequirementRuleDto.cs`), способную хранить условия (триггеры по НВОС, Воде, Побочным продуктам) и результат (название, основание, риск).
+- **Действие 2 (Backend - API):** ИИ создал `RequirementRulesController.cs` (защищен `[Authorize(Roles = "Admin")]`) с полным CRUD-функционалом для управления этими правилами.
+- **Действие 3 (Backend - Seeding):** **(Критически важный шаг)** ИИ модифицировал `DataSeeder.cs`, добавив метод `SeedRequirementRulesAsync`. Этот метод считывает всю hardcode-логику из `RequirementGenerationService` и переносит ее в виде записей в новую таблицу `RequirementRules` при первом запуске API. Это гарантирует, что при будущем рефакторинге сервиса генерации не будет потеряно ни одно из 23+ существующих правил.
+- **Действие 4 (Интеграция):** Новые модели, DTO и `DbSet` зарегистрированы в `AppDbContext` и `MappingProfile`. `Program.cs` обновлен для вызова нового `SeedRequirementRulesAsync`.
+
+### Предложенные изменения/артефакты:
+
+- Файл (Новый): `EcologyLK.Api/Models/RequirementRule.cs` (Модель данных для "Правила")
+- Файл (Новый): `EcologyLK.Api/DTOs/RequirementRuleDto.cs` (DTO для API)
+- Файл (Новый): `EcologyLK.Api/Controllers/RequirementRulesController.cs` (API-контроллер)
+- Файл (Изменен): `EcologyLK.Api/Data/AppDbContext.cs` (Добавлен `DbSet<RequirementRule>`)
+- Файл (Изменен): `EcologyLK.Api/Utils/MappingProfile.cs` (Добавлены маппинги для `RequirementRule`)
+- Файл (Изменен): `EcologyLK.Api/Data/DataSeeder.cs` (Добавлен метод `SeedRequirementRulesAsync` с логикой переноса 23+ правил)
+- Файл (Изменен): `EcologyLK.Api/Program.cs` (Вызов `SeedRequirementRulesAsync` при старте)
+
+### Предложение ИИ для следующего этапа:
+
+- Backend API для "Справочника Правил" полностью готово, и БД заполнена данными.
+- Следующий логичный шаг — **реализация UI в Angular (`EcologyLK.Client`)** для использования этого API:
+  1. Создать `requirement-rule.service.ts`.
+  2. Создать компонент `admin-rule-list.component` (защищен `adminGuard`).
+  3. Добавить маршрут `/admin/rules` и ссылку в `app.html` (только для 'Admin').
+- **После** создания UI, следующим (и последним) шагом будет **рефакторинг `RequirementGenerationService`** для использования правил из БД вместо C#-кода.
