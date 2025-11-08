@@ -685,3 +685,29 @@
 
 - Модели, DbContext и Сервисы теперь полностью документированы.
 - Следующим логичным шагом является рефакторинг **API-контроллеров** (`EcologyLK.Api/Controllers`). Хотя у них есть базовые `<summary>`, многим не хватает документации по параметрам (`<param>`) и, что важно для API, кодам ответов (`<response>`), а также очистки от "мусорного" кода (например, `// TODO:` в `ArtifactsController`).
+
+### Этап 25: Рефакторинг (Документирование DTO)
+
+### Действия ИИ:
+
+- Проанализировав код (`CombinedCodeFiles.txt`), ИИ определил, что, хотя доменные модели (Этап 23) и сервисы (Этап 24) были документированы, DTO-классы в `EcologyLK.Api/DTOs` не имели комментариев для своих свойств.
+- Добавлены XML-комментарии (`<summary>`) для всех публичных свойств во всех 11 DTO-файлах для улучшения читаемости API и поддержки Swagger/OpenAPI.
+
+### Предложенные изменения/артефакты:
+
+- Файл (Рефакторинг): `EcologyLK.Api/DTOs/AdminDtos.cs` (Добавлены \<summary> для свойств)
+- Файл (Рефакторинг): `EcologyLK.Api/DTOs/ArtifactDto.cs` (Добавлены \<summary> для свойств)
+- Файл (Рефакторинг): `EcologyLK.Api/DTOs/AuthDtos.cs` (Добавлены \<summary> для свойств)
+- Файл (Рефакторинг): `EcologyLK.Api/DTOs/CalendarEventDto.cs` (Добавлены \<summary> для свойств)
+- Файл (Рефакторинг): `EcologyLK.Api/DTOs/ClientSiteDto.cs` (Добавлены \<summary> для свойств)
+- Файл (Рефакторинг): `EcologyLK.Api/DTOs/CreateClientSiteDto.cs` (Добавлены \<summary> для свойств)
+- Файл (Рефакторинг): `EcologyLK.Api/DTOs/EcologicalRequirementDto.cs` (Добавлены \<summary> для свойств)
+- Файл (Рефакторинг): `EcologyLK.Api/DTOs/FinancialDocumentDto.cs` (Добавлены \<summary> для свойств)
+- Файл (Рефакторинг): `EcologyLK.Api/DTOs/LegalActDto.cs` (Добавлены \<summary> для свойств)
+- Файл (Рефакторинг): `EcologyLK.Api/DTOs/RequirementRuleDto.cs` (Добавлены \<summary> для свойств)
+- Файл (Рефакторинг): `EcologyLK.Api/DTOs/UpdateRequirementDto.cs` (Добавлены \<summary> для свойств)
+
+### Предложение ИИ для следующего этапа:
+
+- DTOs теперь полностью документированы.
+- Следующим логичным шагом, как я предлагал в Этапе 24, будет рефакторинг **API-контроллеров** (`EcologyLK.Api/Controllers`). Необходимо добавить полную XML-документацию для параметров (`<param>`) и кодов ответов (`<response>`), а также очистить любой оставшийся "мусорный" код (например, `// TODO:` в `ArtifactsController` или `// ...` в `FinancialDocumentsController`).
