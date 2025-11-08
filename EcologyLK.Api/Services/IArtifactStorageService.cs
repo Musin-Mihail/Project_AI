@@ -17,7 +17,7 @@ public interface IArtifactStorageService
     /// Возвращает поток данных файла из хранилища.
     /// </summary>
     /// <param name="storedFileName">Имя файла в хранилище.</param>
-    /// <returns>Поток данных (Stream) и MimeType.</returns>
+    /// <returns>Кортеж: Поток данных (Stream) и MimeType.</returns>
     Task<(Stream FileStream, string MimeType)> GetFileStreamAsync(string storedFileName);
 
     /// <summary>

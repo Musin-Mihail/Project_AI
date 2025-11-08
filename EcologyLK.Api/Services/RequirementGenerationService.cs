@@ -1,8 +1,5 @@
-using System.Collections.Generic;
-using System.Linq; // <-- ДОБАВЛЕНО
-using EcologyLK.Api.Data; // <-- ДОБАВЛЕНО
+using EcologyLK.Api.Data;
 using EcologyLK.Api.Models;
-using Microsoft.EntityFrameworkCore; // <-- ДОБАВЛЕНО
 
 namespace EcologyLK.Api.Services;
 
@@ -14,20 +11,25 @@ namespace EcologyLK.Api.Services;
 /// </summary>
 public class RequirementGenerationService : IRequirementGenerationService
 {
-    // --- ДОБАВЛЕНО: Внедрение AppDbContext ---
     private readonly AppDbContext _context;
 
+    /// <summary>
+    /// Конструктор RequirementGenerationService
+    /// </summary>
+    /// <param name="context">Контекст БД (для доступа к RequirementRules)</param>
     public RequirementGenerationService(AppDbContext context)
     {
         _context = context;
     }
 
-    // --- КОНЕЦ БЛОКА ---
-
     /// <summary>
     /// Генерирует список экологических требований на основе
-    /// правил из базы данных.
+    /// правил из базы данных (Справочник RequirementRules).
     /// </summary>
+    /// <param name="category">Категория НВОС</param>
+    /// <param name="waterUse">Тип водопользования</param>
+    /// <param name="hasByproducts">Наличие побочных продуктов</param>
+    /// <returns>Список сгенерированных требований</returns>
     public List<EcologicalRequirement> GenerateRequirements(
         NvosCategory category,
         WaterUseType waterUse,
@@ -95,6 +97,4 @@ public class RequirementGenerationService : IRequirementGenerationService
 
         return requirements;
     }
-
-    // --- Вся "hardcode" логика и метод AddReq() УДАЛЕНЫ ---
 }

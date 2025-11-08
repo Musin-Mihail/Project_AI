@@ -13,11 +13,21 @@ public class AuthTokenService : IAuthTokenService
 {
     private readonly IConfiguration _config;
 
+    /// <summary>
+    /// Конструктор AuthTokenService
+    /// </summary>
+    /// <param name="config">Конфигурация приложения (для доступа к Jwt:SecretKey)</param>
     public AuthTokenService(IConfiguration config)
     {
         _config = config;
     }
 
+    /// <summary>
+    /// Генерирует JWT для указанного пользователя
+    /// </summary>
+    /// <param name="user">Пользователь (AppUser)</param>
+    /// <param name="roles">Список ролей пользователя</param>
+    /// <returns>Строка с JWT</returns>
     public string GenerateToken(AppUser user, IEnumerable<string> roles)
     {
         var claims = new List<Claim>

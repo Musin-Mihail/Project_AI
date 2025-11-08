@@ -11,6 +11,10 @@ public class FileArtifactStorageService : IArtifactStorageService
     private readonly string _storagePath;
     private readonly IContentTypeProvider _contentTypeProvider;
 
+    /// <summary>
+    /// Конструктор FileArtifactStorageService
+    /// </summary>
+    /// <param name="env">Web Host Environment (для определения ContentRootPath)</param>
     public FileArtifactStorageService(IWebHostEnvironment env)
     {
         // Сохраняем файлы в папку "uploads" в корне проекта
@@ -23,6 +27,12 @@ public class FileArtifactStorageService : IArtifactStorageService
         _contentTypeProvider = new FileExtensionContentTypeProvider();
     }
 
+    /// <summary>
+    /// Сохраняет файл в хранилище (локальная папка 'uploads').
+    /// </summary>
+    /// <param name="fileStream">Поток данных файла.</param>
+    /// <param name="fileName">Уникальное имя файла для сохранения.</param>
+    /// <returns>Имя сохраненного файла.</returns>
     public async Task<string> SaveFileAsync(Stream fileStream, string fileName)
     {
         var filePath = Path.Combine(_storagePath, fileName);
@@ -36,6 +46,12 @@ public class FileArtifactStorageService : IArtifactStorageService
         return fileName;
     }
 
+    /// <summary>
+    /// Возвращает поток данных файла из хранилища (папка 'uploads').
+    /// </summary>
+    /// <param name="storedFileName">Имя файла в хранилище.</param>
+    /// <returns>Кортеж: Поток данных (Stream) и MimeType.</returns>
+    /// <exception cref="FileNotFoundException">Если файл не найден.</exception>
     public Task<(Stream FileStream, string MimeType)> GetFileStreamAsync(string storedFileName)
     {
         var filePath = Path.Combine(_storagePath, storedFileName);
@@ -55,6 +71,10 @@ public class FileArtifactStorageService : IArtifactStorageService
         return Task.FromResult(((Stream)fileStream, mimeType));
     }
 
+    /// <summary>
+    /// Удаляет файл из хранилища (папка 'uploads').
+    /// </summary>
+    /// <param name="storedFileName">Имя файла в хранилище.</param>
     public Task DeleteFileAsync(string storedFileName)
     {
         var filePath = Path.Combine(_storagePath, storedFileName);
