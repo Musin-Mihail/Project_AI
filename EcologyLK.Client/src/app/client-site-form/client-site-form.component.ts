@@ -1,12 +1,16 @@
 import { Component, inject } from '@angular/core';
-// --- ИЗМЕНЕНО: Добавлен FormGroup ---
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NvosCategory, WaterUseType, CreateClientSiteDto } from '../models';
 import { ClientSiteService } from '../client-site.service';
-import { AuthService } from '../auth.service'; // Импортируем AuthService
+import { AuthService } from '../auth.service';
 
+/**
+ * Компонент "Анкеты" (CreateClientSite).
+ * Отвечает за сбор данных о новой площадке и отправку их в API
+ * для генерации "Карты требований".
+ */
 @Component({
   selector: 'app-client-site-form',
   standalone: true,
@@ -15,27 +19,34 @@ import { AuthService } from '../auth.service'; // Импортируем AuthSer
   styleUrl: './client-site-form.component.scss',
 })
 export class ClientSiteFormComponent {
-  // Опции для выпадающих списков (select)
+  /**
+   * Опции для выпадающего списка (select) "Категория НВОС".
+   */
   nvosOptions = Object.keys(NvosCategory).filter((v) => isNaN(Number(v)));
+  /**
+   * Опции для выпадающего списка (select) "Тип водопользования".
+   */
   waterUseOptions = Object.keys(WaterUseType).filter((v) => isNaN(Number(v)));
 
-  // --- ИЗМЕНЕНО: Форма теперь объявляется здесь, а инициализируется в конструкторе ---
+  /**
+   * Реактивная форма Angular для "Анкеты".
+   */
   siteForm: FormGroup;
-  // --- ДОБАВЛЕНО: Флаг для UI ---
+  /**
+   * Флаг, определяющий, является ли текущий пользователь Администратором.
+   * (Влияет на отображение поля `clientId`).
+   */
   isAdmin = false;
 
-  // --- ИЗМЕНЕНО: Используем внедрение через конструктор ---
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private siteService: ClientSiteService,
-    // --- ИЗМЕНЕНО: authService сделан public для доступа из шаблона ---
     public authService: AuthService
   ) {
-    // --- ДОБАВЛЕНО: Проверяем роль ---
     this.isAdmin = this.authService.hasRole('Admin');
 
-    // --- ДОБАВЛЕНО: Динамическая конфигурация формы ---
+    // Динамическая конфигурация формы
     const formConfig: any = {
       name: ['Тестовая площадка', Validators.required],
       address: ['г. Москва, ул. Пример, д. 1', Validators.required],
@@ -49,12 +60,12 @@ export class ClientSiteFormComponent {
       formConfig.clientId = [1, [Validators.required, Validators.min(1)]];
     }
 
-    // --- ИЗМЕНЕНО: Инициализация формы ---
     this.siteForm = this.fb.group(formConfig);
   }
 
   /**
-   * Вызывается при отправке формы
+   * Вызывается при отправке формы "Анкеты".
+   * Собирает данные, формирует DTO и отправляет в API.
    */
   onSubmit() {
     if (this.siteForm.invalid) {
@@ -75,7 +86,7 @@ export class ClientSiteFormComponent {
 
     if (!targetClientId) {
       console.error('Ошибка: Не удалось определить ClientId для создания площадки.');
-      // TODO: Показать ошибку пользователю
+      // (Refactoring Note): Здесь должна быть user-friendly ошибка
       return;
     }
 
@@ -101,7 +112,7 @@ export class ClientSiteFormComponent {
       },
       error: (err) => {
         console.error('Ошибка при создании площадки:', err);
-        // TODO: Показать ошибку пользователю
+        // (Refactoring Note): Здесь должна быть user-friendly ошибка
       },
     });
   }

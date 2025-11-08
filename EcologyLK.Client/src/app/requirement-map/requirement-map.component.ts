@@ -10,15 +10,18 @@ import {
 import { ClientSiteService } from '../client-site.service';
 import { ArtifactManagerComponent } from '../artifact-manager/artifact-manager.component';
 import { FinancialDocumentListComponent } from '../financial-document-list/financial-document-list.component';
-// (1) --- ИМПОРТЫ ДЛЯ РЕДАКТИРОВАНИЯ ---
 import { AuthService } from '../auth.service';
 import { RequirementService } from '../requirement.service';
 import { EditRequirementModalComponent } from '../edit-requirement-modal/edit-requirement-modal.component';
 
+/**
+ * Компонент "Карта требований" (Страница Площадки).
+ * Ключевой компонент, отображающий "Карту требований", "Артефакты"
+ * и "Фин. документы" для `siteId`, полученного из URL.
+ */
 @Component({
   selector: 'app-requirement-map',
   standalone: true,
-  // (2) --- ДОБАВЛЕНЫ НОВЫЕ КОМПОНЕНТЫ ---
   imports: [
     CommonModule,
     ArtifactManagerComponent,
@@ -29,24 +32,43 @@ import { EditRequirementModalComponent } from '../edit-requirement-modal/edit-re
   styleUrl: './requirement-map.component.scss',
 })
 export class RequirementMapComponent implements OnInit {
-  // Внедряем сервисы
   private route = inject(ActivatedRoute);
   private siteService = inject(ClientSiteService);
-  // (3) --- ДОБАВЛЕНЫ СЕРВИСЫ ---
-  public authService = inject(AuthService); // Сделан public для шаблона
+  /**
+   * Public (для доступа из шаблона)
+   */
+  public authService = inject(AuthService);
   private requirementService = inject(RequirementService);
 
-  // Используем signal для хранения состояния
+  /**
+   * Signal, хранящий полные данные о площадке (включая требования).
+   */
   site: WritableSignal<ClientSiteDto | null> = signal(null);
+  /**
+   * Signal, хранящий ID текущей площадки (из URL).
+   */
   siteIdSignal = signal<number>(0);
+  /**
+   * Signal, управляющий отображением индикатора загрузки.
+   */
   isLoading = signal(true);
+  /**
+   * Signal, хранящий текст ошибки (если она произошла).
+   */
   error = signal<string | null>(null);
 
-  // (4) --- СИГНАЛЫ ДЛЯ МОДАЛЬНОГО ОКНА ---
+  /**
+   * Signal, управляющий видимостью модального окна редактирования.
+   */
   isModalOpen = signal(false);
+  /**
+   * Signal, хранящий DTO требования, которое выбрано для редактирования.
+   */
   selectedRequirement = signal<EcologicalRequirementDto | null>(null);
 
-  // Enum для использования в шаблоне
+  /**
+   * Enum RequirementStatus (для доступа из шаблона).
+   */
   RequirementStatus = RequirementStatus;
 
   ngOnInit() {
@@ -66,6 +88,10 @@ export class RequirementMapComponent implements OnInit {
     this.loadSiteData(siteId);
   }
 
+  /**
+   * Загружает данные площадки (включая "Карту требований") с сервера.
+   * @param siteId ID площадки для загрузки.
+   */
   loadSiteData(siteId: number) {
     this.isLoading.set(true);
     this.siteService.getClientSite(siteId).subscribe({
@@ -81,7 +107,11 @@ export class RequirementMapComponent implements OnInit {
     });
   }
 
-  // Вспомогательная функция для отображения статуса
+  /**
+   * Вспомогательная функция для преобразования Enum Status в русский текст.
+   * @param status Enum `RequirementStatus`.
+   * @returns Текст статуса (напр. "В работе").
+   */
   getStatusText(status: RequirementStatus): string {
     switch (status) {
       case RequirementStatus.NotStarted:
@@ -95,10 +125,10 @@ export class RequirementMapComponent implements OnInit {
     }
   }
 
-  // (5) --- МЕТОДЫ ДЛЯ РЕДАКТИРОВАНИЯ ---
-
   /**
    * Открывает модальное окно для редактирования
+   * (Вызывается кнопкой "Редактировать").
+   * @param requirement DTO требования для редактирования.
    */
   onEdit(requirement: EcologicalRequirementDto) {
     this.selectedRequirement.set(requirement);
@@ -107,6 +137,7 @@ export class RequirementMapComponent implements OnInit {
 
   /**
    * Закрывает модальное окно
+   * (Вызывается кнопкой "Отмена" в модальном окне).
    */
   onCloseModal() {
     this.isModalOpen.set(false);
@@ -114,7 +145,9 @@ export class RequirementMapComponent implements OnInit {
   }
 
   /**
-   * Вызывается при сохранении из модального окна
+   * Вызывается при сохранении из модального окна.
+   * Отправляет `UpdateRequirementDto` в API.
+   * @param dto DTO с обновленными данными.
    */
   onSaveRequirement(dto: UpdateRequirementDto) {
     const reqToUpdate = this.selectedRequirement();

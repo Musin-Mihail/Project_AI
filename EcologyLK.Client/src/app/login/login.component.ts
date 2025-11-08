@@ -5,6 +5,10 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../auth.service';
 import { LoginUserDto } from '../models';
 
+/**
+ * Компонент "Страница Входа" (Login).
+ * Отвечает за аутентификацию пользователя.
+ */
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -13,22 +17,26 @@ import { LoginUserDto } from '../models';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  // Внедряем сервисы
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private authService = inject(AuthService);
 
-  // Signal для отображения ошибок
+  /**
+   * Signal, хранящий текст ошибки входа (если она произошла).
+   */
   error = signal<string | null>(null);
 
-  // Форма входа
+  /**
+   * Реактивная форма Angular для входа.
+   */
   loginForm = this.fb.group({
     email: ['admin@ecology.lk', [Validators.required, Validators.email]],
     password: ['AdminP@ssw0rd1!', Validators.required],
   });
 
   /**
-   * Вызывается при отправке формы
+   * Вызывается при отправке формы входа.
+   * Отправляет DTO в `auth.service`.
    */
   onSubmit() {
     if (this.loginForm.invalid) {

@@ -4,6 +4,11 @@ import { ArtifactDto } from '../models';
 import { ArtifactService } from '../artifact.service';
 import { AuthService } from '../auth.service';
 
+/**
+ * Компонент "Менеджер Артефактов".
+ * Отображает список файлов (артефактов) для `siteId`,
+ * позволяет загружать новые и управлять (скачивать/удалять) существующими.
+ */
 @Component({
   selector: 'app-artifact-manager',
   standalone: true,
@@ -12,27 +17,48 @@ import { AuthService } from '../auth.service';
   styleUrl: './artifact-manager.component.scss',
 })
 export class ArtifactManagerComponent implements OnInit {
+  /**
+   * ID площадки (ClientSite), для которой отображаются артефакты.
+   * (Получаем от родительского компонента, напр. `requirement-map`).
+   */
   @Input({ required: true }) siteId!: number;
 
   private artifactService = inject(ArtifactService);
   private authService = inject(AuthService);
 
+  /**
+   * Signal, хранящий список DTO артефактов.
+   */
   artifacts: WritableSignal<ArtifactDto[]> = signal([]);
+  /**
+   * Signal, управляющий отображением индикатора загрузки.
+   */
   isLoading = signal(true);
+  /**
+   * Signal, хранящий текст ошибки (если она произошла).
+   */
   error = signal<string | null>(null);
+  /**
+   * Файл, выбранный в `<input type="file">`, готовый к загрузке.
+   */
   fileToUpload: File | null = null;
 
+  /**
+   * Флаг, определяющий, имеет ли пользователь право на удаление
+   * (true, если Admin).
+   */
   canDelete: boolean = false;
 
   ngOnInit() {
     if (this.siteId > 0) {
       this.loadArtifacts();
     }
+    // Проверяем роль пользователя при инициализации
     this.canDelete = this.authService.hasRole('Admin');
   }
 
   /**
-   * Загружает список артефактов для площадки
+   * Загружает список артефактов (метаданные) с сервера.
    */
   loadArtifacts() {
     this.isLoading.set(true);
@@ -49,7 +75,8 @@ export class ArtifactManagerComponent implements OnInit {
   }
 
   /**
-   * Вызывается при выборе файла в <input>
+   * Вызывается при выборе файла в `<input type="file">`.
+   * @param event Событие `change` от input.
    */
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -59,7 +86,8 @@ export class ArtifactManagerComponent implements OnInit {
   }
 
   /**
-   * Вызывается при клике на "Загрузить"
+   * Вызывается при клике на "Загрузить".
+   * Отправляет `fileToUpload` в `artifact.service`.
    */
   onUpload() {
     if (!this.fileToUpload) {
@@ -67,8 +95,7 @@ export class ArtifactManagerComponent implements OnInit {
       return;
     }
 
-    // TODO: Добавить выбор EcologicalRequirementId,
-    // пока отправляем null
+    // (Refactoring Note): В будущем здесь можно добавить выбор requirementId
     this.artifactService.uploadArtifact(this.siteId, null, this.fileToUpload).subscribe({
       next: (newArtifact) => {
         // Добавляем новый артефакт в начало списка
@@ -85,14 +112,17 @@ export class ArtifactManagerComponent implements OnInit {
   }
 
   /**
-   * Вызывается при клике на "Скачать"
+   * Вызывается при клике на "Скачать".
+   * Инициирует скачивание файла через `artifact.service`.
+   * @param artifact DTO артефакта, который нужно скачать.
    */
   onDownload(artifact: ArtifactDto) {
     this.artifactService.downloadArtifact(artifact.id, artifact.originalFileName);
   }
 
   /**
-   * Вызывается при клике на "Удалить"
+   * Вызывается при клике на "Удалить" (только для Админа).
+   * @param artifact DTO артефакта для удаления.
    */
   onDelete(artifact: ArtifactDto) {
     if (!confirm(`Вы уверены, что хотите удалить ${artifact.originalFileName}?`)) {
@@ -101,7 +131,7 @@ export class ArtifactManagerComponent implements OnInit {
 
     this.artifactService.deleteArtifact(artifact.id).subscribe({
       next: () => {
-        // Удаляем артефакт из списка
+        // Удаляем артефакт из локального списка
         this.artifacts.update((list) => list.filter((a) => a.id !== artifact.id));
       },
       error: (err) => {
@@ -111,7 +141,9 @@ export class ArtifactManagerComponent implements OnInit {
   }
 
   /**
-   * Вспомогательная функция для форматирования размера файла
+   * Вспомогательная функция для форматирования размера файла (в KB/MB).
+   * @param bytes Размер файла в байтах.
+   * @returns Форматированная строка (напр. "1.25 MB").
    */
   formatFileSize(bytes: number): string {
     if (bytes === 0) return '0 Bytes';

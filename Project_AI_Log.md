@@ -834,3 +834,24 @@
 
 - Компоненты "Админ-панели" очищены и документированы.
 - Следующим логичным шагом будет рефакторинг **оставшихся ключевых компонентов Frontend**: `client-site-form.component.ts` (Анкета), `artifact-manager.component.ts` (Хранилище), `requirement-map.component.ts` (Карта требований) и `login.component.ts`.
+
+### Этап 32: Рефакторинг Frontend (Ключевые компоненты, Завершение)
+
+### Действия ИИ:
+
+- Следуя плану из Этапа 31, ИИ завершил рефакторинг ключевых компонентов Frontend (`*.component.ts`).
+- Добавлены JSDoc-комментарии для публичных методов (`ngOnInit`, `onSubmit`, `onDownload` и т.д.) и свойств в компонентах `client-site-form`, `artifact-manager`, `requirement-map` и `login`.
+- Удалены устаревшие "мусорные" комментарии (`// TODO: ...`, `// --- (X) ---` и `<!-- ... -->`) из `.ts` и `.html` файлов.
+
+### Предложенные изменения/артефакты:
+
+- Файл (Рефакторинг): `EcologyLK.Client/src/app/client-site-form/client-site-form.component.ts` (Добавлен JSDoc, код очищен)
+- Файл (Рефакторинг): `EcologyLK.Client/src/app/artifact-manager/artifact-manager.component.ts` (Добавлен JSDoc, код очищен)
+- Файл (Рефакторинг): `EcologyLK.Client/src/app/requirement-map/requirement-map.component.ts` (Добавлен JSDoc, код очищен)
+- Файл (Рефакторинг): `EcologyLK.Client/src/app/login/login.component.ts` (Добавлен JSDoc, код очищен)
+- Файл (Рефакторинг): `EcologyLK.Client/src/app/login/login.component.html` (Удален комментарий `TODO`)
+
+### Предложение ИИ для следующего этапа:
+
+- **Рефакторинг MVP завершен.** Весь код Backend (API) и Frontend (Angular) очищен и документирован (XML/JSDoc).
+- Следующим шагом может быть реализация **"не-MVP"** функционала, указанного в ТЗ (п.1), например: "Лента изменений в законодательстве", "Снижение затрат" или "Шаблоны".
